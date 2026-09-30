@@ -35,21 +35,45 @@ copy:
 ```text
 <service-module>/src/main/java/<base-package>/
 ├── entity/                # shared JPA entities, one class per table across all functions
+├── repository/            # shared when the service keeps repositories here
 └── <function-key>/
     ├── config/
-    ├── dto/
-    ├── repository/
+    ├── model/ or dto/       # follow the service convention
+    ├── repository/          # only if function-local repositories are used
     ├── processor/
-    └── support/
+    └── constant/ or support/ # as required
 ```
 
 Before generating an entity, check whether it already exists at `<base-package>/entity/` from another
-function and reuse it instead of duplicating the class.
+function and reuse it instead of duplicating the class. Check the service's shared repositories too.
+Choose plain CRUD, composite named-query `FunctionConfig`, or concurrency-sensitive SQL chain based on
+the contract and the selected framework runtime, not on a fixed per-function file list.
 
 The reference path `top-spring-boot-starter/top-demo-project/src/main/java/com/top/demo/<function-key>/`
 is illustrative only. Do not write feature code to `top-demo-project` unless it is the selected service.
 
 Implement only what the API contract requires. Reuse `top-common` for routing, CRUD, pagination, authorization, error handling, and OpenAPI generation.
+
+### Observed CRM example: WCRM010301
+
+The checked-in `top-crm` implementation is an example of the **resulting file layout**, not evidence
+of which files were generated automatically. It has no `api-contract.json` in the shared feature
+folder yet, so it cannot itself serve as an approved generation input.
+
+| Ownership | Observed files and purpose |
+|---|---|
+| `com.top.crm.wcrm010301.config` | `TmtActivityMasterFunctionConfig` registers GET `search` and POST `save` using `FunctionConfig.builder()` and named queries. |
+| `com.top.crm.wcrm010301.model` | `TmtPMActivityMasterDto`, `TmtPMActivityMasterFilterDto`, `TmtRepairInspectionItemDto`, `TmtContactChannelDetailDto`; the parent nests validated child lists. |
+| `com.top.crm.wcrm010301.processor` | `TmtActivityMasterProcessor` enriches the search result with children, validates business rules, and dispatches child writes by row status. |
+| `com.top.crm.wcrm010301.constant` | `TmtActivityMasterConstants` and `TmtActivityMasterErrorCode`; error messages live in the service's `crm_error_messages.json`. |
+| `com.top.crm.entity` | Shared `TbMCrmActivityTmt`, `TbMCrmActivityItemDetailTmt`, and `TbMCrmContactProcessChannelTmt` hold table mappings and named SQL; reuse existing table owners. |
+| `com.top.crm.repository` | Shared `TbMCrmActivityTmtRepository` provides child reads; do not create a second repository just to satisfy a template. |
+| `src/test` | `features/WCRM010301.feature` and `com.top.crm.test.steps.TmtActivityMasterSteps` exercise framework routes. |
+
+Before mirroring this example, verify the selected service's query executor, processor lifecycle and
+transaction boundaries. The sample contains native lock queries and placeholder audit user values;
+neither is a generation rule. Resolve lock/version semantics, audit parameters, and child rollback
+from the validated contract and the actual runtime.
 
 ## Phase 4: Verification
 

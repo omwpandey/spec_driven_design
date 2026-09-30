@@ -26,6 +26,7 @@ The `.github/` directory contains the API workflow guidance:
 	├── review-api-contract.prompt.md          # review contract traceability and framework fit
 	├── prepare-api-contract.prompt.md         # prepare source-backed decisions in chat
 	├── generate-crud-function.prompt.md       # generate standard CRUD implementation files
+	├── generate-function-config-function.prompt.md # composite named-query functions
 	├── generate-sql-chain-function.prompt.md  # generate concurrency-safe SQL-chain files
 	├── generate-cucumber-feature.prompt.md    # generate Cucumber scenarios
 	└── review-generated-function.prompt.md    # review generated Java against the contract
@@ -115,12 +116,13 @@ base-package level, not duplicated per function:
 ```text
 <base-package>/
 ├── entity/         # shared JPA entities, reused across function keys
+├── repository/     # shared when the service keeps repositories here
 └── <function-key>/
     ├── config/     # FunctionConfig or GenericCrud registration
-    ├── dto/        # GenericDataStore and GenericFilter types
-    ├── repository/ # JpaRepository + JpaSpecificationExecutor
+	├── model/ or dto/ # GenericDataStore and GenericFilter types
+	├── repository/ # only if the service uses function-local repositories
     ├── processor/  # CustomLogicProcessor only for business rules
-    └── support/    # feature-specific helpers, validators, combo loaders
+	└── constant/ or support/ # only as needed
 ```
 
 Do not create feature controllers, CRUD services, exception handlers, security filters, manual OpenAPI annotations, DTO mappers, or custom repository query methods when the framework already provides the behavior.

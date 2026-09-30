@@ -29,12 +29,15 @@ guessing.
    ask.
 3. Choose the generation style:
    - Plain CRUD over generic endpoints → use `/generate-crud-function`.
+  - Named-query search/save, a composite DTO with child rows, or a processor-driven write without
+    a source-backed concurrency requirement → use `/generate-function-config-function`.
    - A concurrency-sensitive write (stock deduction, balance adjustment, gapless sequence) →
      use `/generate-sql-chain-function`.
-4. Generate only the feature module files: `config/`, `dto/`, `repository/`, `processor/` (only if the
-   contract lists business rules), plus the error-catalogue entries. The entity belongs at
-   `<base-package>/entity/`, shared across function keys — check it does not already exist there for the
-   same table before creating one.
+4. Generate only the files required by the contract. Match the service's existing DTO package (`model/`
+  or `dto/`), and reuse existing repositories under `<base-package>/repository/` when they own the
+  entity; do not create a function-local duplicate. Add `config/`, `processor/` (only for documented
+  business rules), and error-catalogue entries as needed. Entities belong at `<base-package>/entity/`,
+  shared across function keys — check for the same table before creating one.
 5. Follow `.github/instructions/java-implementation-reference.instructions.md` and
    `.github/instructions/main-source-code.instructions.md` from this repository, and the Java repository's
    own `.github/copilot-instructions.md`.

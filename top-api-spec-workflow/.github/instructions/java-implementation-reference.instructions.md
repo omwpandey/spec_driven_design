@@ -38,17 +38,18 @@ under `<function-key>`:
 ```text
 <service-module>/src/main/java/<base-package>/
 ├── entity/
+├── repository/            # shared when the service keeps repositories here
 └── <function-key>/
     ├── config/
-    ├── dto/
-    ├── repository/
+	├── model/ or dto/       # follow the service's convention
+	├── repository/          # only if function-local repositories are used
     ├── processor/
-    └── support/
+	└── constant/ or support/ # only when required
 ```
 
 The service module and base package must come from the repository build files and an existing feature. Do
-not assume `top-demo-project` or `com.top.demo`. Before generating an entity, check `<base-package>/entity/`
-for an existing class for the same table and reuse it instead of creating a duplicate.
+not assume `top-demo-project` or `com.top.demo`. Before generating an entity or repository, check
+for existing ownership of the same table in the selected service and reuse it instead of duplicating it.
 
 Detailed rules for files under `src/main/java` are in
 `.github/instructions/main-source-code.instructions.md`. Those rules are automatically applied to Java
@@ -63,7 +64,8 @@ Generate only the pieces required by the validated API contract:
 	documents different audit columns.
 - Data DTO: `GenericDataStore`.
 - Filter DTO: `GenericFilter` containing only searchable fields.
-- Repository: `JpaRepository` and `JpaSpecificationExecutor`, with no custom query methods.
+- Repository: reuse an existing service repository where possible; for new plain CRUD repositories use
+	`JpaRepository` and `JpaSpecificationExecutor` with no new custom query methods.
 - Registration: `@GenericCrud` for plain JPA CRUD, otherwise `FunctionConfig.builder()`.
 - Processor: `CustomLogicProcessor` only when business rules require it.
 
@@ -94,6 +96,9 @@ needed.
 - Use `FunctionConfig.builder()` for named queries, `countSql`, `readOnly`, `transactional`,
 	`SqlWriteType`, validation groups, or multi-step chains.
 - Register each `functionId` and action exactly once.
+- For composite named-query search/save functions, follow `/generate-function-config-function`.
+	Confirm processor hook dispatch and transaction scope in the selected runtime before putting child
+	writes in `postCreate`/`postUpdate` or assuming a `save` action uses either hook.
 
 ## Runtime safety rules
 
