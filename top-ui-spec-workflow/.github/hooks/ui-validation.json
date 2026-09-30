@@ -1,0 +1,18 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "node scripts/agent-pre-tool-use.mjs",
+        "timeout": 15
+      }
+    ],
+    "PostToolUse": [
+      {
+        "type": "command",
+        "command": "node scripts/agent-post-tool-use.mjs",
+        "timeout": 30
+      }
+    ]
+  }
+}

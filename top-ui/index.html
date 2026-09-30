@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Toyota TopsCRM</title>
+    <!-- TOPSCRM Typography: Prompt (EN) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      .boot-loader { min-height: 100vh; display: grid; place-items: center; }
+      .boot-loader::after { content: ""; width: 36px; height: 36px; border: 3px solid #d5d9de; border-top-color: #d71920; border-radius: 50%; animation: boot-spin .8s linear infinite; }
+      @keyframes boot-spin { to { transform: rotate(360deg); } }
+      @media (prefers-reduced-motion: reduce) { .boot-loader::after { animation-duration: 2s; } }
+    </style>
+  </head>
+  <body>
+    <div id="root"><div class="boot-loader" role="status" aria-label="Loading application"></div></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

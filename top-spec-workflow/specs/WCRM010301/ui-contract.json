@@ -1,0 +1,478 @@
+{
+  "schemaVersion": "1.0",
+  "feature": {
+    "id": "WCRM010301",
+    "title": "TMT Activity Maintenance - PM",
+    "summary": "Setup Activity screen for TMT Periodic Maintenance: configure Service & Repair Inspection items and Contact Channel Details for the Periodic Maintenance activity type."
+  },
+  "sources": [
+    { "id": "dr-page", "type": "dr-page", "locator": "raw/page.md" },
+    { "id": "ux-image", "type": "ux-image", "locator": "raw/images/Periodic Maintenance - TMT-20260831-144226.png (UX-001)" },
+    { "id": "item-desc", "type": "item-desc", "locator": "raw/sheets/Item_Desc.md > UI_Components, UI_Events" },
+    { "id": "data-map", "type": "data-map", "locator": "raw/sheets/DATA_MAP.md > DB_Entity, DB_Columns, API_Field_DB_Mapping" },
+    { "id": "developer-decision-001", "type": "developer-decision", "locator": "grill session 2026-09-15, approver Om Pandey: exclude Set Template button/dialogs" },
+    { "id": "developer-decision-002", "type": "developer-decision", "locator": "grill session 2026-09-15, approver Om Pandey: Channel values = Call, Email, SMS" },
+    { "id": "developer-decision-003", "type": "developer-decision", "locator": "grill session 2026-09-15, approver Om Pandey: Contact Process values = Service Follow-up only" },
+    { "id": "developer-decision-004", "type": "developer-decision", "locator": "grill session 2026-09-15, approver Om Pandey: Activity Day range = -30 to 30" }
+  ],
+  "screen": {
+    "name": "TMT Activity Maintenance - Setup Activity (Periodic Maintenance)",
+    "route": null,
+    "modes": ["Add", "Update"]
+  },
+  "uiStructure": {
+    "sections": [
+      { "id": "SEC-ACTIVITY-TYPE", "title": "Activity Type", "sources": ["dr-page > Activity Type", "ux-image > Activity Type panel"] },
+      { "id": "SEC-INSPECTION", "title": "Service & Repair Inspection Item", "sources": ["dr-page > On-Load Operation", "ux-image > Service & Repair Inspection Item grid"] },
+      { "id": "SEC-CONTACT", "title": "Contact Channel Details", "sources": ["dr-page > On-Load Operation", "ux-image > Contact Channel Details grid"] },
+      { "id": "SEC-FOOTER", "title": "Footer", "sources": ["ux-image > footer"] }
+    ]
+  },
+  "fields": [
+    {
+      "id": "CMP-WCRM010301-001",
+      "label": "Periodic Maintenance",
+      "section": "SEC-ACTIVITY-TYPE",
+      "semanticType": "radio",
+      "modeBehavior": {
+        "add": "Selected by default; only one Activity Type radio may be selected at a time.",
+        "update": "Radio group disabled; Activity Type cannot be changed once an activity is opened for update (EVT_WCRM010301_10)."
+      },
+      "validation": ["Mandatory (Y)"],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-001", "dr-page > On-Load Operation > Default Data", "ux-image > Activity Type panel"]
+    },
+    {
+      "id": "CMP-WCRM010301-002",
+      "label": "Additional Rejected Job",
+      "section": "SEC-ACTIVITY-TYPE",
+      "semanticType": "radio",
+      "modeBehavior": { "add": "Visible option in the shared Activity Type group; deselected by default.", "update": "Radio group disabled (see CMP-WCRM010301-001)." },
+      "validation": [],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-002", "ux-image > Activity Type panel"]
+    },
+    {
+      "id": "CMP-WCRM010301-003",
+      "label": "DCM Vehicle",
+      "section": "SEC-ACTIVITY-TYPE",
+      "semanticType": "radio",
+      "modeBehavior": { "add": "Visible option in the shared Activity Type group; deselected by default.", "update": "Radio group disabled (see CMP-WCRM010301-001)." },
+      "validation": [],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-003", "ux-image > Activity Type panel"]
+    },
+    {
+      "id": "CMP-WCRM010301-004",
+      "label": "TCFR+",
+      "section": "SEC-ACTIVITY-TYPE",
+      "semanticType": "radio",
+      "modeBehavior": { "add": "Visible option in the shared Activity Type group; deselected by default.", "update": "Radio group disabled (see CMP-WCRM010301-001)." },
+      "validation": [],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-004", "ux-image > Activity Type panel"]
+    },
+    {
+      "id": "CMP-WCRM010301-005",
+      "label": "SSC/SCS",
+      "section": "SEC-ACTIVITY-TYPE",
+      "semanticType": "radio",
+      "modeBehavior": { "add": "Visible option in the shared Activity Type group; deselected by default.", "update": "Radio group disabled (see CMP-WCRM010301-001)." },
+      "validation": [],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-005", "ux-image > Activity Type panel"]
+    },
+    {
+      "id": "CMP-WCRM010301-006",
+      "label": "Body & Paint",
+      "section": "SEC-ACTIVITY-TYPE",
+      "semanticType": "radio",
+      "modeBehavior": { "add": "Visible option in the shared Activity Type group; deselected by default.", "update": "Radio group disabled (see CMP-WCRM010301-001)." },
+      "validation": [],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-006", "ux-image > Activity Type panel"]
+    },
+    {
+      "id": "CMP-WCRM010301-007",
+      "label": "BP Insurance Renewal",
+      "section": "SEC-ACTIVITY-TYPE",
+      "semanticType": "radio",
+      "modeBehavior": { "add": "Visible option in the shared Activity Type group; deselected by default.", "update": "Radio group disabled (see CMP-WCRM010301-001)." },
+      "validation": [],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-007", "ux-image > Activity Type panel"]
+    },
+    {
+      "id": "CMP-WCRM010301-008",
+      "label": "Upload",
+      "section": "SEC-ACTIVITY-TYPE",
+      "semanticType": "radio",
+      "modeBehavior": { "add": "Visible option in the shared Activity Type group; deselected by default.", "update": "Radio group disabled (see CMP-WCRM010301-001)." },
+      "validation": [],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-008", "ux-image > Activity Type panel"]
+    },
+    {
+      "id": "CMP-WCRM010301-009",
+      "label": "Post Service Follow Up (PSFU)",
+      "section": "SEC-ACTIVITY-TYPE",
+      "semanticType": "radio",
+      "modeBehavior": { "add": "Visible option in the shared Activity Type group; deselected by default.", "update": "Radio group disabled (see CMP-WCRM010301-001)." },
+      "validation": [],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-009", "ux-image > Activity Type panel"]
+    },
+    {
+      "id": "CMP-WCRM010301-010",
+      "label": "Status",
+      "section": "SEC-INSPECTION",
+      "semanticType": "system-generated-text",
+      "modeBehavior": {
+        "add": "Set to ADD when a row is created (inspection or contact grid).",
+        "update": "Set to UPD when an existing row is edited (e.g. Mandatory checkbox toggled); set to DEL when a row is marked for deletion."
+      },
+      "validation": ["Not editable by user"],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-010", "dr-page > Add/Update/Delete Operation", "ux-image > STATUS column (both grids)"]
+    },
+    {
+      "id": "CMP-WCRM010301-011",
+      "label": "NO.",
+      "section": "SEC-INSPECTION",
+      "semanticType": "auto-number",
+      "modeBehavior": { "add": "Auto sequential numbering per row.", "update": "Unchanged." },
+      "validation": ["Not editable"],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-011", "ux-image > No. column"]
+    },
+    {
+      "id": "CMP-WCRM010301-012",
+      "label": "Repair/Inspection Code",
+      "section": "SEC-INSPECTION",
+      "semanticType": "dropdown",
+      "modeBehavior": {
+        "add": "Editable and selectable; populated from PM Operation Master / Operation code master, ascending display order.",
+        "update": "Disabled for existing Service & Repair Inspection Item rows (dr-page > On-Load Operation)."
+      },
+      "validation": ["Mandatory (Y)"],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-012", "dr-page > On-Load Operation, Add Operation", "ux-image > REPAIR/INSPECTION CODE column"]
+    },
+    {
+      "id": "CMP-WCRM010301-013",
+      "label": "Description",
+      "section": "SEC-INSPECTION",
+      "semanticType": "text-readonly",
+      "modeBehavior": {
+        "add": "Auto-populated from the selected Repair/Inspection Code; not editable.",
+        "update": "Auto-populated and disabled for existing rows (dr-page > Update Record)."
+      },
+      "validation": ["Mandatory (Y) — but system-populated, not user-entered", "Not editable"],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-013", "dr-page > Add Operation, Update Record", "ux-image > DESCRIPTION column"]
+    },
+    {
+      "id": "CMP-WCRM010301-014",
+      "label": "Mandatory",
+      "section": "SEC-INSPECTION",
+      "semanticType": "checkbox",
+      "modeBehavior": {
+        "add": "Editable; default unchecked (N).",
+        "update": "Editable (check/uncheck); when an existing row's Mandatory flag is checked, row Status changes to UPD (dr-page > Update Record)."
+      },
+      "validation": [],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-014", "dr-page > Update Record", "ux-image > MANDATORY column"]
+    },
+    {
+      "id": "CMP-WCRM010301-015",
+      "label": "Action (Delete icon)",
+      "section": "SEC-INSPECTION",
+      "semanticType": "icon-button",
+      "modeBehavior": { "add": "Enabled per user permissions.", "update": "Clicking marks the row Status = DEL (row remains visible until Save)." },
+      "validation": [],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-015", "dr-page > Delete Operation", "ux-image > ACTION column"]
+    },
+    {
+      "id": "CMP-WCRM010301-016",
+      "label": "Add Row",
+      "section": "SEC-INSPECTION",
+      "semanticType": "button",
+      "modeBehavior": { "add": "Enabled per user permissions; adds a new editable inspection row with Status = ADD." },
+      "validation": [],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-016", "dr-page > Add Operation", "ux-image > + Add (inspection grid)"]
+    },
+    {
+      "id": "CMP-WCRM010301-017",
+      "label": "Contact Process",
+      "section": "SEC-CONTACT",
+      "semanticType": "dropdown",
+      "modeBehavior": { "add": "Editable and selectable; values = Service Follow-up only (developer-decision-003).", "update": "Editable." },
+      "validation": ["Mandatory (Y)", "Mandatory for each row (submit validation)"],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-017", "dr-page > On-Load Operation, Submit Validations", "ux-image > CONTACT PROCESS column", "developer-decision-003"]
+    },
+    {
+      "id": "CMP-WCRM010301-018",
+      "label": "Channel",
+      "section": "SEC-CONTACT",
+      "semanticType": "dropdown",
+      "modeBehavior": { "add": "Editable and selectable; values = Call, Email, SMS (developer-decision-002).", "update": "Editable." },
+      "validation": ["Mandatory (Y)", "Mandatory for each row (submit validation)"],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-018", "dr-page > On-Load Operation, Submit Validations", "ux-image > CHANNEL column", "developer-decision-002"]
+    },
+    {
+      "id": "CMP-WCRM010301-019",
+      "label": "Activity Day",
+      "section": "SEC-CONTACT",
+      "semanticType": "number",
+      "modeBehavior": {
+        "add": "Editable textbox on selection of Service Follow-up Contact Process; blank by default.",
+        "update": "Editable."
+      },
+      "validation": [
+        "Mandatory (Y)",
+        "Numeric values only, no characters",
+        "Max 2 digits",
+        "Range -30 to 30 (developer-decision-004)",
+        "Mandatory for each row and cannot be blank (submit validation)"
+      ],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-019", "dr-page > Validations (Frontend Check), Submit Validations", "ux-image > ACTIVITY DAY column", "developer-decision-004"]
+    },
+    {
+      "id": "CMP-WCRM010301-020",
+      "label": "Add Row",
+      "section": "SEC-CONTACT",
+      "semanticType": "button",
+      "modeBehavior": { "add": "Enabled per user permissions; adds a new editable contact row with Status = ADD." },
+      "validation": [],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-020", "ux-image > + Add (contact grid)"]
+    },
+    {
+      "id": "CMP-WCRM010301-021",
+      "label": "Delete Row",
+      "section": "SEC-CONTACT",
+      "semanticType": "icon-button",
+      "modeBehavior": { "add": "Enabled per user permissions.", "update": "Clicking marks the row Status = DEL (row remains visible until Save)." },
+      "validation": [],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-021", "dr-page > Delete Operation", "ux-image > ACTION column (contact grid)"]
+    },
+    {
+      "id": "CMP-WCRM010301-022",
+      "label": "Save",
+      "section": "SEC-FOOTER",
+      "semanticType": "button",
+      "modeBehavior": { "add": "Enabled per user permissions.", "update": "Enabled per user permissions." },
+      "validation": ["Mandatory (Y) — triggers full-form validation before save"],
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-022", "dr-page > Save Operation", "ux-image > Save button"]
+    }
+  ],
+  "actions": [
+    {
+      "id": "EVT_WCRM010301_01",
+      "label": "Load Screen",
+      "trigger": "Screen navigation to Setup Activity - Periodic Maintenance",
+      "preconditions": ["User logged in with TMT role and screen access"],
+      "frontendValidation": [],
+      "onValidationFailure": null,
+      "action": "System loads Setup Activity screen with default PM configuration; Periodic Maintenance radio selected by default; existing Service & Repair Inspection Items and Contact Channel Details displayed; deleted records excluded.",
+      "onSuccess": "Screen displayed with default service intervals and existing configuration data.",
+      "onFailure": null,
+      "sources": ["item-desc > UI_Events > EVT_WCRM010301_01", "dr-page > On-Load Operation"]
+    },
+    {
+      "id": "EVT_WCRM010301_02",
+      "label": "Select Periodic Maintenance",
+      "trigger": "User selects the Periodic Maintenance radio button",
+      "preconditions": ["Activity Type options are available on screen"],
+      "frontendValidation": ["Unsaved changes warning displayed when changing Activity Type (item-desc > CMP-WCRM010301-001 behavior)"],
+      "onValidationFailure": null,
+      "action": "System loads related service and inspection data for the selected activity type.",
+      "onSuccess": null,
+      "onFailure": null,
+      "sources": ["item-desc > UI_Events > EVT_WCRM010301_02", "item-desc > UI_Components > CMP-WCRM010301-001"]
+    },
+    {
+      "id": "EVT_WCRM010301_03",
+      "label": "Add Inspection Row",
+      "trigger": "User clicks Add Row (Service & Repair Inspection Item)",
+      "preconditions": ["Inspection section available"],
+      "frontendValidation": [],
+      "onValidationFailure": null,
+      "action": "New editable row added for service/inspection entry with Status = ADD.",
+      "onSuccess": null,
+      "onFailure": null,
+      "sources": ["item-desc > UI_Events > EVT_WCRM010301_03", "item-desc > UI_Components > CMP-WCRM010301-016"]
+    },
+    {
+      "id": "EVT_WCRM010301_04",
+      "label": "Delete Inspection Row",
+      "trigger": "User clicks the delete icon on an inspection row",
+      "preconditions": ["At least one row exists"],
+      "frontendValidation": [],
+      "onValidationFailure": null,
+      "action": "Row marked with Status = DEL; removed from list.",
+      "onSuccess": "Selected inspection row deleted successfully",
+      "onFailure": "Failed to delete inspection row due to system error",
+      "sources": ["item-desc > UI_Events > EVT_WCRM010301_04", "dr-page > Delete Operation"]
+    },
+    {
+      "id": "EVT_WCRM010301_05",
+      "label": "Select Repair Code",
+      "trigger": "User selects a repair/inspection code",
+      "preconditions": ["Inspection row and dropdown available"],
+      "frontendValidation": [],
+      "onValidationFailure": null,
+      "action": "System auto-populates the Description field for the selected code.",
+      "onSuccess": null,
+      "onFailure": null,
+      "sources": ["item-desc > UI_Events > EVT_WCRM010301_05", "dr-page > Add Operation"]
+    },
+    {
+      "id": "EVT_WCRM010301_06",
+      "label": "Update Mandatory",
+      "trigger": "User updates the Mandatory checkbox on an inspection row",
+      "preconditions": ["Inspection row available"],
+      "frontendValidation": [],
+      "onValidationFailure": null,
+      "action": "Mandatory flag updated; if the row is an existing record, row Status changes to UPD.",
+      "onSuccess": null,
+      "onFailure": null,
+      "sources": ["item-desc > UI_Events > EVT_WCRM010301_06", "dr-page > Update Record"]
+    },
+    {
+      "id": "EVT_WCRM010301_07",
+      "label": "Add Contact Row",
+      "trigger": "User clicks Add Row (Contact Channel Details)",
+      "preconditions": ["Contact section available"],
+      "frontendValidation": [],
+      "onValidationFailure": null,
+      "action": "New contact configuration row added with Status = ADD.",
+      "onSuccess": null,
+      "onFailure": null,
+      "sources": ["item-desc > UI_Events > EVT_WCRM010301_07", "item-desc > UI_Components > CMP-WCRM010301-020"]
+    },
+    {
+      "id": "EVT_WCRM010301_08",
+      "label": "Enter Activity Day",
+      "trigger": "User enters an Activity Day value",
+      "preconditions": ["Contact row available"],
+      "frontendValidation": ["Numeric values only, no characters", "Max 2 digits", "Range -30 to 30 (developer-decision-004)"],
+      "onValidationFailure": "Invalid activity day value entered, please enter valid number",
+      "action": "Activity timing value stored on the row.",
+      "onSuccess": null,
+      "onFailure": null,
+      "sources": ["item-desc > UI_Events > EVT_WCRM010301_08", "dr-page > Validations (Frontend Check)", "developer-decision-004"]
+    },
+    {
+      "id": "EVT_WCRM010301_09",
+      "label": "Save Activity",
+      "trigger": "User clicks Save",
+      "preconditions": ["Required data entered (service, inspection, contact config)"],
+      "frontendValidation": [
+        "Activity Name not empty and within max length",
+        "At least one inspection item selected",
+        "Channel selection mandatory for each row",
+        "Contact Process mandatory for each row",
+        "Activity Day mandatory, numeric, within -30 to 30 range",
+        "At least one Contact Process record configured",
+        "Duplicate Contact Process + Channel combinations not allowed"
+      ],
+      "onValidationFailure": "Validation failed, mandatory fields missing or error occurred during saving",
+      "confirmationRequired": true,
+      "confirmationMessage": "Do you want to save this activity setup?",
+      "action": "System validates and saves the full activity setup; ADD rows inserted, UPD rows updated, DEL rows deleted from backend table.",
+      "onSuccess": "Activity configuration saved successfully and available in Activity Master List (HTTP 201 Created)",
+      "onFailure": "Validation failed, mandatory fields missing or error occurred during saving",
+      "sources": ["item-desc > UI_Events > EVT_WCRM010301_09", "dr-page > Submit Validations, Save Operation, On Successful Operations"]
+    },
+    {
+      "id": "EVT_WCRM010301_10",
+      "label": "Update Action",
+      "trigger": "User opens a previously created activity (opened by TMT)",
+      "preconditions": ["Screen in editable state"],
+      "frontendValidation": [],
+      "onValidationFailure": null,
+      "confirmationRequired": true,
+      "confirmationMessage": "Do you want to save the changes?",
+      "action": "Activity Type radio group is disabled; Activity Type cannot be changed. Changes are applied on click of Save.",
+      "onSuccess": "Activity configuration updated successfully",
+      "onFailure": "Validation failed, mandatory fields missing or error occurred during saving",
+      "sources": ["item-desc > UI_Events > EVT_WCRM010301_10"]
+    }
+  ],
+  "states": [
+    { "id": "STATE-ADD", "description": "Row created but not yet saved.", "sources": ["item-desc > UI_Components > CMP-WCRM010301-010", "dr-page > Add Operation"] },
+    { "id": "STATE-UPD", "description": "Existing row modified but not yet saved.", "sources": ["item-desc > UI_Components > CMP-WCRM010301-010", "dr-page > Update Record"] },
+    { "id": "STATE-DEL", "description": "Row marked for deletion; removed from backend on Save.", "sources": ["item-desc > UI_Components > CMP-WCRM010301-010", "dr-page > Delete Operation"] }
+  ],
+  "permissions": [
+    { "id": "PERM-ADD-DELETE-SAVE", "description": "Add, Delete, and Save actions are enabled based on user permissions.", "sources": ["dr-page > On-Load Operation > Enable / Disable - All Controls"] }
+  ],
+  "acceptanceCriteria": [
+    { "id": "AC-01", "description": "On load, Periodic Maintenance is selected by default and existing (non-deleted) inspection and contact records are displayed.", "sources": ["EVT_WCRM010301_01", "dr-page > On-Load Operation"] },
+    { "id": "AC-02", "description": "Selecting a different Activity Type radio warns about unsaved changes before switching.", "sources": ["EVT_WCRM010301_02", "item-desc > UI_Components > CMP-WCRM010301-001"] },
+    { "id": "AC-03", "description": "Add Row creates a new editable inspection row with Status = ADD; Repair/Inspection Code is selectable and Description auto-populates on selection.", "sources": ["EVT_WCRM010301_03", "EVT_WCRM010301_05"] },
+    { "id": "AC-04", "description": "Deleting an inspection or contact row marks it Status = DEL and hides it from the grid; it is removed from the backend on Save.", "sources": ["EVT_WCRM010301_04", "dr-page > Delete Operation"] },
+    { "id": "AC-05", "description": "Checking Mandatory on an existing inspection row changes its Status to UPD.", "sources": ["EVT_WCRM010301_06", "dr-page > Update Record"] },
+    { "id": "AC-06", "description": "Contact Process is limited to Service Follow-up; Channel is limited to Call, Email, SMS.", "sources": ["developer-decision-002", "developer-decision-003"] },
+    { "id": "AC-07", "description": "Activity Day accepts numeric values only, max 2 digits, within -30 to 30; invalid entry shows an inline error.", "sources": ["EVT_WCRM010301_08", "developer-decision-004"] },
+    { "id": "AC-08", "description": "Save is blocked (with a validation message) unless at least one inspection item and at least one contact process record are configured, all mandatory fields are filled, and no duplicate Contact Process + Channel combination exists.", "sources": ["EVT_WCRM010301_09", "dr-page > Submit Validations"] },
+    { "id": "AC-09", "description": "Save prompts for confirmation, then on success shows 'Activity configuration saved successfully and available in Activity Master List' (HTTP 201).", "sources": ["EVT_WCRM010301_09", "dr-page > On Successful Operations"] },
+    { "id": "AC-10", "description": "Opening an existing activity disables the Activity Type radio group; changes on Save show 'Activity configuration updated successfully'.", "sources": ["EVT_WCRM010301_10"] }
+  ],
+  "conflicts": [
+    {
+      "id": "CONF-01",
+      "topic": "Set Template button/dialogs",
+      "description": "ux-image shows a 'Set Template' footer button and dr-page has a full narrative 'Set Template Operation' section (SMS/Email/Line OA template fields, char limits, preview), but item-desc UI_Components/UI_Events has no corresponding rows.",
+      "resolution": "Excluded from this task's scope per developer-decision-001.",
+      "sources": ["dr-page > Set Template Operation", "ux-image > footer", "developer-decision-001"]
+    },
+    {
+      "id": "CONF-02",
+      "topic": "Contact Channel 'Channel' dropdown values",
+      "description": "dr-page text lists Call, Email, SMS; item-desc CMP-WCRM010301-018 behavior note lists Email, TMT LON; ux-image sample rows show Email, SMS.",
+      "resolution": "Call, Email, SMS confirmed authoritative per developer-decision-002.",
+      "sources": ["dr-page > On-Load Operation", "item-desc > UI_Components > CMP-WCRM010301-018", "ux-image > CHANNEL column", "developer-decision-002"]
+    },
+    {
+      "id": "CONF-03",
+      "topic": "Contact Process dropdown values",
+      "description": "dr-page text and ux-image show only Service Follow-up; item-desc CMP-WCRM010301-017 behavior note says the dropdown also loads Appointment Confirmation.",
+      "resolution": "Service Follow-up only confirmed authoritative per developer-decision-003.",
+      "sources": ["dr-page > Common On-Load Details", "item-desc > UI_Components > CMP-WCRM010301-017", "ux-image > CONTACT PROCESS column", "developer-decision-003"]
+    },
+    {
+      "id": "CONF-04",
+      "topic": "Activity Day validation range",
+      "description": "dr-page general validation text states -30 to 30; item-desc CMP-WCRM010301-019 behavior note specifies per-process ranges (-1 to -30 for Service Followup/Appointment Confirmation; 1 to 30 for Contact Process).",
+      "resolution": "-30 to 30 flat range confirmed authoritative per developer-decision-004.",
+      "sources": ["dr-page > Validations (Frontend Check)", "item-desc > UI_Components > CMP-WCRM010301-019", "developer-decision-004"]
+    },
+    {
+      "id": "CONF-05",
+      "topic": "'Activity Name' validation bullet with no corresponding field",
+      "description": "dr-page's Validations (Frontend Check) list and CMP-WCRM010301-022 (Save) behavior note both mention an 'Activity Name' field requirement, but item-desc UI_Components has no Activity Name row for WCRM010301 (this text appears to be carried over from the sibling WCRM010203 Activity Setup screen, which does have Activity Name/Customer Type fields).",
+      "resolution": "No Activity Name field is implemented since none exists in the authoritative field list (fields[]). The corresponding validation bullet is not implemented. Not re-litigated with the developer since ui-contract.json fields[] already omitted this field correctly.",
+      "sources": ["dr-page > Validations (Frontend Check)", "item-desc > UI_Components > CMP-WCRM010301-022"]
+    }
+  ],
+  "openQuestions": [
+    {
+      "id": "OQ-01",
+      "description": "No structured Screen Mode table was found. Add/Update modes are inferred from narrative page.md sections (Add Operation, Update Record) and EVT_WCRM010301_10. Non-blocking.",
+      "blocking": false,
+      "sources": ["grill.md > Screen modes"]
+    },
+    {
+      "id": "OQ-02",
+      "description": "No Access Control table was found. dr-page only states Add/Delete/Save are 'enabled based on user permissions' without naming roles or permission codes. Non-blocking for UI contract; permission-gating implementation detail is unresolved.",
+      "blocking": false,
+      "sources": ["dr-page > Enable / Disable - All Controls", "grill.md > Access"]
+    },
+    {
+      "id": "OQ-03",
+      "description": "API_Data_Map_Details_* workbook (endpoint paths, HTTP methods, request/response schemas) is missing. Only API IDs (API-WCRM010301-001..005) and field-to-column mappings are known from data-map. Service layer implementation will need this before build. Non-blocking for the UI contract.",
+      "blocking": false,
+      "sources": ["grill.md > Missing from attachments"]
+    },
+    {
+      "id": "OQ-04",
+      "description": "The other 8 Activity Type radios (Additional Rejected Job, DCM Vehicle, TCFR+, SSC/SCS, Body & Paint, BP Insurance Renewal, Upload, PSFU) are visible on the shared screen but this DR (titled '- PM') only defines Periodic Maintenance behavior. Selecting another radio's downstream behavior is out of scope for this Function Key. Non-blocking; visible-only per catalog UX evidence.",
+      "blocking": false,
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-002..009", "ux-image > Activity Type panel"]
+    },
+    {
+      "id": "OQ-05",
+      "description": "The exact copy for the 'unsaved changes' warning shown when switching Activity Type (CMP-WCRM010301-001 behavior note) is not specified anywhere in the DR/item-desc/data-map (only that a warning must appear). A neutral, non-business-rule placeholder message is used pending copy sign-off. All other dialog/toast copy (save confirm, update confirm, save/delete success and failure messages) is DR-specified verbatim. Non-blocking.",
+      "blocking": false,
+      "sources": ["item-desc > UI_Components > CMP-WCRM010301-001"]
+    }
+  ]
+}

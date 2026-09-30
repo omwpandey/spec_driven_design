@@ -1,0 +1,34 @@
+{
+  "functionKey": "WCRM010203",
+  "url": "https://tdem.atlassian.net/wiki/spaces/TC1/pages/1659175122/WCRM010203+Dealer+Activity+Maintenance+-+DCM+Vehicle",
+  "title": "[WCRM010203] Dealer Activity Maintenance - DCM Vehicle",
+  "images": [
+    "DCM Vehicle - Dealer Update Only.png",
+    "DCM Vehicle - Dealer Main.png"
+  ],
+  "screens": [
+    {
+      "id": "UX-001",
+      "title": "Screen UX",
+      "image": "DCM Vehicle - Dealer Update Only.png",
+      "source": "dr-page:UX Design"
+    },
+    {
+      "id": "UX-002",
+      "title": "Screen UX",
+      "image": "DCM Vehicle - Dealer Main.png",
+      "source": "dr-page:UX Design"
+    }
+  ],
+  "skipped_not_ux_design": [
+    "image-20260702-055941.png",
+    "image-20260702-071418.png",
+    "image-20260805-092728.png",
+    "image-20260805-092803.png"
+  ],
+  "xlsx": {
+    "Item_Desc_": "Item_Desc_DCM_VehicleDealer.xlsx",
+    "DATA_MAP_": "DATA_MAP_DCM_Vehicle_Dealer_WCRM010203.xlsx"
+  },
+  "grill": "pending_review"
+}

@@ -1,0 +1,20 @@
+{
+  "data": null,
+  "page": 0,
+  "size": 20,
+  "tableData": [
+    {
+      "comboType": "CONTACT_PROCESS",
+      "code": "SFU",
+      "name": "Service Follow-up",
+      "id": 9
+    },
+    {
+      "comboType": "CONTACT_PROCESS",
+      "code": "APC",
+      "name": "Appointment Confirmation",
+      "id": 10
+    }
+  ],
+  "totalCount": 2
+}

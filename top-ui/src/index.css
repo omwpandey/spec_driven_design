@@ -1,0 +1,60 @@
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  /* Neutralize any rounded corners the host/portal shell may apply to the
+     mount element in deployed environments (not present locally). */
+  border-radius: 0 !important;
+}
+
+/*
+ * Global fluid scaling.
+ *
+ * We scale the ENTIRE app content with CSS `zoom` (see the [data-app-scale]
+ * container in MainLayout). `zoom` scales everything uniformly — fonts, icons,
+ * images, spacing, borders — including hardcoded px values, so the whole UI
+ * shrinks together on smaller screens while staying at its CURRENT size (zoom
+ * = 1) on normal/large desktops. This keeps the root font-size at the default
+ * 16px so rem-based text is not scaled twice.
+ */
+html {
+  font-size: 16px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Prompt', 'Sarabun', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

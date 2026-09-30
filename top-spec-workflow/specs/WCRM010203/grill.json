@@ -1,0 +1,308 @@
+{
+  "schemaVersion": "1.0",
+  "functionKey": "WCRM010203",
+  "status": "agreed",
+  "page": {
+    "id": "1659175122",
+    "title": "[WCRM010203] Dealer Activity Maintenance - DCM Vehicle",
+    "version": 79,
+    "when": "2026-08-26T08:51:13.873Z",
+    "url": "https://tdem.atlassian.net/wiki/spaces/TC1/pages/1659175122/WCRM010203+Dealer+Activity+Maintenance+-+DCM+Vehicle",
+    "spaceKey": "TC1"
+  },
+  "identified": {
+    "objective": "This section describes the confirmed operations for the Dealer Activity Maintenance screen, including on-load behavior, control states, validations, add, edit, delete, save, template configuration, and exit handling.",
+    "preCondition": "",
+    "postCondition": "",
+    "modes": [],
+    "fields": [
+      {
+        "label": "Back",
+        "section": "Header",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Activity Type Selection",
+        "section": "Activity Type",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Total Vehicles in Database",
+        "section": "Dealer Vehicle Summary",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Total Individual Customers",
+        "section": "Dealer Vehicle Summary",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Total Corporate Customers",
+        "section": "Dealer Vehicle Summary",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Activity ID",
+        "section": "Activity Setup",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Activity Name",
+        "section": "Activity Setup",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Activity Description",
+        "section": "Activity Setup",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Customer Type",
+        "section": "Activity Setup",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Suppress Days",
+        "section": "Activity Setup",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Select Item",
+        "section": "DCM Vehicle Item",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "No.",
+        "section": "DCM Vehicle Item",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Status",
+        "section": "DCM Vehicle Item",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Items",
+        "section": "DCM Vehicle Item",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Mileage",
+        "section": "DCM Vehicle Item",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Duration/Period",
+        "section": "DCM Vehicle Item",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Mandatory",
+        "section": "DCM Vehicle Item",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Add Contact Channel",
+        "section": "Contact Channel Details",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "No.",
+        "section": "Contact Channel Details",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Status",
+        "section": "Contact Channel Details",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Contact Process",
+        "section": "Contact Channel Details",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Channel",
+        "section": "Contact Channel Details",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Activity Day",
+        "section": "Contact Channel Details",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Assign Group",
+        "section": "Contact Channel Details",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Action",
+        "section": "Contact Channel Details",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Delete Activity",
+        "section": "Footer",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Set Template",
+        "section": "Footer",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Save",
+        "section": "Footer",
+        "source": "item-desc:UI_Components"
+      }
+    ],
+    "actions": [
+      {
+        "label": "EVT-001 On Load",
+        "state": "System loads Setup Activity by Dealer screen. When user selects Activity Type = DCM Vehicle, the system dynamically loads Activity ID, Activity Name, Activity D",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT-002 On Change – Activity Type",
+        "state": "System loads the configuration associated with the selected Activity Type. If unsaved changes exist, the system displays a warning message before changing the A",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT-003 On Change – Activity Description",
+        "state": "System updates the Activity Description value in screen memory. Updated data will be persisted through API_003 (Save Setup Activity).",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT-004 On Change – Customer Type",
+        "state": "System updates the selected Customer Type for the activity setup. Dropdown values are loaded using CMB-001 (Get Customer Type). Updated data will be persisted t",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT-005 On Check/Uncheck – DCM Vehicle Item",
+        "state": "System updates the selected DCM Vehicle Item for the activity configuration. DCM Vehicle Items including Item Name, Mileage, Duration/Period, and Mandatory info",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT-006 On Click – Add Contact Channel",
+        "state": "System adds a new editable row to the Contact Channel Details grid and assigns the next sequence number. Status is set to ADD. Data entry will be saved using AP",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT-007 On Change – Contact Process",
+        "state": "System updates the selected Contact Process. When Contact Process = Appointment Confirmation, system automatically sets Activity Day = -1 and makes the Activity",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT-008 On Change – Channel",
+        "state": "System updates the selected communication channel. Channel dropdown values are loaded based on the selected Contact Process. Updated data will be persisted thro",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT-009 On Change – Activity Day",
+        "state": "System validates and stores Activity Day. For Service Follow-up, Activity Day must be between -30 and +30. For Appointment Confirmation, Activity Day is automat",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT-010 On Change – Assign Group",
+        "state": "System updates the selected Assign Group for the Contact Channel record. Assign Group values are loaded using CMB-004. Updated data will be persisted through AP",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT-011 On Click – Delete Contact Channel",
+        "state": "System marks the selected Contact Channel row for deletion. Existing records are marked as DEL, while newly added unsaved rows are removed from the grid. Change",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT-012 On Click – Delete Activity",
+        "state": "System displays a confirmation message. Upon confirmation, the selected DCM Vehicle Activity is marked as INACTIVE using API_004. No future call plans will be g",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT-013 On Click – Set Template",
+        "state": "System opens Template Selection popup/screen and allows the user to select a predefined communication template. Upon selection, the system populates Contact Cha",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT-014 On Click – Save",
+        "state": "System validates Activity ID, Activity Description, Customer Type, Suppress Days, validates at least one DCM Vehicle Item is selected, validates at least one Co",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT-015 On Navigate Away With Unsaved Changes",
+        "state": "System checks whether any unsaved changes exist before navigating to another Activity Type, screen, menu, or link. If unsaved changes exist, a warning message i",
+        "source": "item-desc:UI_Events"
+      }
+    ],
+    "permissions": [],
+    "apis": [
+      {
+        "value": "API_001",
+        "source": "data-map:DB_Entity"
+      },
+      {
+        "value": "API_003",
+        "source": "data-map:DB_Entity"
+      },
+      {
+        "value": "API_004",
+        "source": "data-map:DB_Entity"
+      },
+      {
+        "value": "API_002",
+        "source": "data-map:DB_Entity"
+      },
+      {
+        "value": "API_005",
+        "source": "data-map:DB_Entity"
+      },
+      {
+        "value": "API_006",
+        "source": "data-map:DB_Entity"
+      },
+      {
+        "value": "API_007",
+        "source": "data-map:DB_Entity"
+      },
+      {
+        "value": "CMB-001",
+        "source": "data-map:DB_Entity"
+      },
+      {
+        "value": "CMB-004",
+        "source": "data-map:DB_Entity"
+      },
+      {
+        "value": "CMB-002",
+        "source": "data-map:DB_Entity"
+      },
+      {
+        "value": "CMB-003",
+        "source": "data-map:DB_Entity"
+      }
+    ],
+    "screens": [
+      {
+        "id": "UX-001",
+        "title": "Init Mode",
+        "image": "DCM Vehicle - Dealer Update Only.png",
+        "source": "dr-page:UX Design"
+      }
+    ],
+    "images": [
+      "DCM Vehicle - Dealer Update Only.png"
+    ],
+    "workbooks": {
+      "Item_Desc_": "Item_Desc_DCM_VehicleDealer.xlsx",
+      "DATA_MAP_": "DATA_MAP_DCM_Vehicle_Dealer_WCRM010203.xlsx"
+    },
+    "missing": [
+      "API_Data_Map_Details_*"
+    ]
+  },
+  "agreement": {
+    "by": "Om Pandey",
+    "at": "2026-08-30T07:17:17.018Z",
+    "notes": "Build UX-001 Init Mode only (DCM Vehicle - Dealer Update Only). Dropped UX-002 Add Mode."
+  }
+}

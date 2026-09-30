@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "UI Feature Contract",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "feature",
+    "sources",
+    "screen",
+    "fields",
+    "actions",
+    "states",
+    "permissions",
+    "acceptanceCriteria",
+    "conflicts",
+    "openQuestions"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "feature": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "summary"
+      ]
+    },
+    "sources": {
+      "type": "array"
+    },
+    "screen": {
+      "type": "object"
+    },
+    "fields": {
+      "type": "array"
+    },
+    "actions": {
+      "type": "array"
+    },
+    "states": {
+      "type": "array"
+    },
+    "permissions": {
+      "type": "array"
+    },
+    "acceptanceCriteria": {
+      "type": "array"
+    },
+    "conflicts": {
+      "type": "array"
+    },
+    "openQuestions": {
+      "type": "array"
+    }
+  }
+}

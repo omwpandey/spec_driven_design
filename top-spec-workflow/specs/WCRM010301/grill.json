@@ -1,0 +1,213 @@
+{
+  "schemaVersion": "1.0",
+  "functionKey": "WCRM010301",
+  "status": "agreed",
+  "page": {
+    "id": "1646690475",
+    "title": "[WCRM010301] TMT Activity Maintenance - PM",
+    "version": 133,
+    "when": "2026-09-14T11:17:32.474Z",
+    "url": "https://tdem.atlassian.net/wiki/spaces/TC1/pages/1646690475/WCRM010301+TMT+Activity+Maintenance+-+PM",
+    "spaceKey": "TC1"
+  },
+  "identified": {
+    "objective": "This section describes confirmed operations for the Setup Activity &ndash; Periodic Maintenance (TMT) screen based on the uploaded template details.",
+    "preCondition": "",
+    "postCondition": "",
+    "modes": [],
+    "fields": [
+      {
+        "label": "Periodic Maintenance",
+        "section": "Activity Type",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Additional Rejected Job",
+        "section": "Activity Type",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "DCM Vehicle",
+        "section": "Activity Type",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "TCFR+",
+        "section": "Activity Type",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "SSC/SCS",
+        "section": "Activity Type",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Body & Paint",
+        "section": "Activity Type",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "BP Insurance Renewal",
+        "section": "Activity Type",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Upload",
+        "section": "Activity Type",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Post Service Follow Up (PSFU)",
+        "section": "Activity Type",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Status",
+        "section": "Common",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "NO.",
+        "section": "Service & Repair Inspection",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Repair/Inspection Code",
+        "section": "Service & Repair Inspection",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Description",
+        "section": "Service & Repair Inspection",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Mandatory",
+        "section": "Service & Repair Inspection",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Action",
+        "section": "Service & Repair Inspection",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Add Row",
+        "section": "Service & Repair Inspection",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Contact Process",
+        "section": "Contact Channel Details",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Channel",
+        "section": "Contact Channel Details",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Activity Day",
+        "section": "Contact Channel Details",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Add Row",
+        "section": "Contact Channel Details",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Delete Row",
+        "section": "Contact Channel Details",
+        "source": "item-desc:UI_Components"
+      },
+      {
+        "label": "Save",
+        "section": "Footer",
+        "source": "item-desc:UI_Components"
+      }
+    ],
+    "actions": [
+      {
+        "label": "EVT_WCRM010301_01 Load Screen",
+        "state": "System loads Setup Activity screen with default PM configuration",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT_WCRM010301_02 Select Periodic Maintenance",
+        "state": "User selects the \"Periodic Maintenance\" radio button",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT_WCRM010301_03 Add Inspection Row",
+        "state": "User clicks Add Row to add inspection",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT_WCRM010301_04 Delete Inspection Row",
+        "state": "User deletes  inspection row",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT_WCRM010301_05 Select Repair Code",
+        "state": "User selects repair/inspection code",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT_WCRM010301_06 Update Mandatory",
+        "state": "User updates mandatory checkbox",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT_WCRM010301_07 Add Contact Row",
+        "state": "User clicks Add Row in contact section",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT_WCRM010301_08 Enter Activity Day",
+        "state": "User enters activity day numeric value only",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT_WCRM010301_09 Save Activity",
+        "state": "User clicks Save to store configuration",
+        "source": "item-desc:UI_Events"
+      },
+      {
+        "label": "EVT_WCRM010301_10 Update Action",
+        "state": "User opens the created activity by TMT then Radio button will be disabled and Activity Type cannot be changed",
+        "source": "item-desc:UI_Events"
+      }
+    ],
+    "permissions": [],
+    "apis": [
+      {
+        "value": "API-WCRM010301",
+        "source": "data-map:DB_Entity"
+      }
+    ],
+    "screens": [
+      {
+        "id": "UX-001",
+        "title": "Screen UX",
+        "image": "Periodic Maintenance - TMT-20260831-144226.png",
+        "source": "dr-page:UX Design"
+      }
+    ],
+    "images": [
+      "Periodic Maintenance - TMT-20260831-144226.png"
+    ],
+    "workbooks": {
+      "Item_Desc_": "Item_desc_Periodic_Maintenance(Activity_Master_Maintenance)_TMT_301 (3) (1).xlsx",
+      "DATA_MAP_": "Data_Map_Periodic_Maintenance(Activity_Master_Maintenance)_TMT (2) (2) (1) (2) 1 (1) (1).xlsx"
+    },
+    "missing": [
+      "API_Data_Map_Details_*"
+    ]
+  },
+  "agreement": {
+    "by": "Om Pandey",
+    "at": "2026-09-15T10:20:26.755Z",
+    "notes": null
+  }
+}

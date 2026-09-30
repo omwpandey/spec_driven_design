@@ -1,0 +1,18 @@
+{
+  "name": "top-spec-workflow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shared technology-neutral specifications for Toyota TOP features.",
+  "engines": {
+    "node": ">=22"
+  },
+  "type": "module",
+  "scripts": {
+    "feature:init": "node scripts/init-feature.mjs",
+    "feature:fetch": "node scripts/fetch-requirements.mjs",
+    "feature:grill": "node scripts/grill-requirements.mjs"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0"
+  }
+}

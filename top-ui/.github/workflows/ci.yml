@@ -1,0 +1,395 @@
+name: Build and Deploy to S3
+
+on:
+  push:
+    branches:
+      - develop
+      - feature/*
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+
+# ---------------------------------------------------------------------------
+# Before this workflow runs, configure GitHub Actions variables and secrets at:
+#   GitHub -> Settings -> Secrets and variables -> Actions
+#
+# Only list values that must be set in repository Settings.
+# Values defined directly in workflow `env` are intentionally omitted.
+#
+# Variables (Settings -> Actions -> Variables) DevSecOps team will provide values for these variables:
+#   SOURCE_SCAN_PATH               = Source path for SonarQube scan
+#   SONAR_CONFIG                   = SonarQube project config/key
+#   DOMAIN_NAME_SAST               = SonarQube server domain
+#   TOP_AWS_REGION                 = AWS region for deployment
+#   AZURE_DEFAULT_DURATION_HOURS   = AWS session duration in hours
+#   AZURE_DEFAULT_REMEMBER_ME      = Persist Azure login session (true/false)
+#
+# Secrets (Settings -> Actions -> Secrets)  DevSecOps team will provide values for these secrets:
+#   SONARQUBE_TOKEN                = SonarQube authentication token
+#   DEVSECOPS_PEM                  = PEM key used by DevSecOps reusable workflows
+#   AZURE_TENANT_ID                = Azure AD tenant ID for aws-azure-login
+#   AZURE_APP_ID_URI               = Azure application ID URI for aws-azure-login
+#   TOP_AZURE_DEFAULT_USERNAME     = Azure service-account username for CI login
+#   AZURE_DEFAULT_PASSWORD     = Azure service-account password for CI login
+#   TOP_AZURE_DEFAULT_ROLE_ARN     = Default AWS role ARN assumed from Azure login
+#   TOP_ROLE_ARN_NONPROD           = AWS IAM role ARN for non-production deploy
+#   TOP_ROLE_ARN_PROD              = AWS IAM role ARN for production deploy
+
+# ---------------------------------------------------------------------------
+
+env: # Developer can update these defaults directly in this workflow file.
+  # Project identity used by reusable security workflows and build metadata.
+  PROJECT_CODE: top
+  SERVICE_NAME: top-ui
+
+  # Runner labels for non-production and production paths.
+  # init job selects which runner downstream jobs will use.
+  RUNNER_LABEL_NONPROD: arc-runner-dind-tma-th
+  RUNNER_LABEL_PROD: arc-runner-prd-tma-th
+
+  # Container images used by build/test jobs and deploy job.
+  IMAGE_NODE_UNITEST: ghcr.io/tma-devsecops/golden-images/node:24.20.0-alpine
+  IMAGE_AWS_AZURE_LOGIN: ghcr.io/tma-devsecops/golden-images/aws-azure-login-tdem:v1.0.0
+
+  # build output path uploaded/downloaded as dist artifact. TODO: Validate path
+  DIST_PATH: dist/
+
+  # Target S3 buckets for develop (DEV) and final tag (PROD) deployments.
+  S3_BUCKET_DEV: topserv-dev.toyota.co.th
+  S3_BUCKET_PROD: topserv-prod.toyota.co.th
+
+  ROLE_ARN_NONPROD: ${{ secrets.TOP_ROLE_ARN_NONPROD }}
+  ROLE_ARN_PROD: ${{ secrets.TOP_ROLE_ARN_PROD }}
+  AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  AZURE_APP_ID_URI: ${{ secrets.AZURE_APP_ID_URI }}
+  AZURE_DEFAULT_USERNAME: ${{ secrets.TOP_AZURE_DEFAULT_USERNAME }}
+  AZURE_DEFAULT_PASSWORD: ${{ secrets.AZURE_DEFAULT_PASSWORD }}
+  AZURE_DEFAULT_ROLE_ARN: ${{ secrets.TOP_AZURE_DEFAULT_ROLE_ARN }}
+  AZURE_DEFAULT_DURATION_HOURS: ${{ vars.AZURE_DEFAULT_DURATION_HOURS }}
+  AZURE_DEFAULT_REMEMBER_ME: ${{ vars.AZURE_DEFAULT_REMEMBER_ME }}
+  REGION: ${{ vars.TOP_AWS_REGION }}
+jobs:
+
+  # ---------------------------------------------------------------------------
+  # STAGE 1 — Initialize Runtime Context
+  # Centralizes runner labels and selects the runner for current ref.
+  # ---------------------------------------------------------------------------
+  init:
+    name: Initialize Runtime Context
+    runs-on: arc-runner-dind-tma-th
+    outputs:
+      runner_nonprod: ${{ steps.set.outputs.runner_nonprod }}
+      runner_prod: ${{ steps.set.outputs.runner_prod }}
+      runner_selected: ${{ steps.set.outputs.runner_selected }}
+      project_code: ${{ steps.set.outputs.project_code }}
+      service_name: ${{ steps.set.outputs.service_name }}
+      image_node_unittest: ${{ steps.set.outputs.image_node_unittest }}
+      image_aws_azure_login: ${{ steps.set.outputs.image_aws_azure_login }}
+    steps:
+      - name: Set runner outputs
+        id: set
+        shell: bash
+        run: |
+          RUNNER_NONPROD="${RUNNER_LABEL_NONPROD}"
+          RUNNER_PROD="${RUNNER_LABEL_PROD}"
+
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            RUNNER_SELECTED="${RUNNER_PROD}"
+          else
+            RUNNER_SELECTED="${RUNNER_NONPROD}"
+          fi
+
+          echo "runner_nonprod=${RUNNER_NONPROD}" >> "$GITHUB_OUTPUT"
+          echo "runner_prod=${RUNNER_PROD}" >> "$GITHUB_OUTPUT"
+          echo "runner_selected=${RUNNER_SELECTED}" >> "$GITHUB_OUTPUT"
+          echo "project_code=${PROJECT_CODE}" >> "$GITHUB_OUTPUT"
+          echo "service_name=${SERVICE_NAME}" >> "$GITHUB_OUTPUT"
+          echo "image_node_unittest=${IMAGE_NODE_UNITEST}" >> "$GITHUB_OUTPUT"
+          echo "image_aws_azure_login=${IMAGE_AWS_AZURE_LOGIN}" >> "$GITHUB_OUTPUT"
+
+  # ---------------------------------------------------------------------------
+  # STAGE 2 — Unit Test
+  # Runs React unit tests with Karma + Chromium and collects coverage.
+  # Uploads lcov.info, junit-report.xml, and the full HTML coverage report
+  # as artifacts for downstream SAST and review.
+  # Runs on: develop branch only.
+  # ---------------------------------------------------------------------------
+  unit-test:
+    name: Unit Test
+
+    if: github.ref_name == 'develop' || startsWith(github.ref_name, 'feature/')
+    needs:
+      - init
+    runs-on: ${{ needs.init.outputs.runner_nonprod }}
+    container:
+      image: ${{ needs.init.outputs.image_node_unittest }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install Chromium
+        run: apk add --no-cache chromium
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline || npm install
+
+      - name: Run unit tests with coverage
+        run: npm run test:coverage
+        env:
+          CI: 'true'
+          CHROME_BIN: /usr/bin/chromium-browser
+      
+      - name: Get short SHA
+        id: git
+        run: echo "sha_short=$(echo '${{ github.sha }}' | cut -c1-7)" >> $GITHUB_OUTPUT
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v7
+        with:
+          name: unit-test-${{ steps.git.outputs.sha_short }}
+          path: |
+            coverage/lcov.info
+            coverage/junit-report.xml
+          retention-days: 7
+
+      - name: Upload test HTML report
+        uses: actions/upload-artifact@v7
+        with:
+          name: unit-test-HTML-${{ steps.git.outputs.sha_short }}
+          path: coverage/
+          retention-days: 7
+
+  # ---------------------------------------------------------------------------
+  # STAGE 3a — Secret Scan  (parallel with sonarqube-scan)
+  # Runs GitLeaks to detect secrets or credentials accidentally committed.
+  # Uses the shared cicd-templates workflow; ALLOW_SECURITY_FAIL_ALL=false
+  # means a finding blocks the pipeline but does not fail other stages.
+  # Runs on: develop branch only.
+  # ---------------------------------------------------------------------------
+  secret-scan:
+    name: GitLeaks Secret Scan
+    if: github.ref_name == 'develop'
+    needs:
+      - init
+      - unit-test
+    uses: TMA-DevSecOps/cicd-templates/.github/workflows/security-gitleak.yml@v1.0.0
+    with:
+      RUNNER_LABEL: ${{ needs.init.outputs.runner_nonprod }}
+      SERVICE_NAME: ${{ needs.init.outputs.service_name }}
+      ALLOW_SECURITY_FAIL_ALL: false
+
+  # ---------------------------------------------------------------------------
+  # STAGE 3b — SonarQube SAST Scan (parallel with secret-scan)
+  # Runs after unit-test so coverage reports are available as input.
+  # Scans the `src/` directory and publishes results to the SonarQube server
+  # defined by DOMAIN_NAME_SAST. Requires SONARQUBE_TOKEN and DEVSECOPS_PEM.
+  # Runs on: develop branch only.
+  # ---------------------------------------------------------------------------
+  sonarqube-scan:
+    name: SonarQube Code Scan
+    if: github.ref_name == 'develop'
+    needs:
+      - init
+      - unit-test
+    uses: TMA-DevSecOps/cicd-templates/.github/workflows/security-sonarqube.yml@v1.0.0
+    with:
+      RUNNER_LABEL: ${{ needs.init.outputs.runner_nonprod }}
+      PROJECT_NAME: ${{ needs.init.outputs.project_code }}
+      SERVICE_NAME: ${{ needs.init.outputs.service_name }}
+      DOMAIN_NAME_SAST: ${{ vars.DOMAIN_NAME_SAST }}
+      ALLOW_SECURITY_FAIL_ALL: false
+    secrets:
+      SONARQUBE_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+      DEVSECOPS_PEM: ${{ secrets.DEVSECOPS_PEM }}
+
+  # ---------------------------------------------------------------------------
+  # STAGE 4 — Build
+  # Runs after all security stages complete (uses `always()` so a non-fatal
+  # security finding does not block the build).
+  # Injects API_URL, APP_NAME, and APP_VERSION at build time via environment
+  # variables consumed by React's environment file replacement.
+  # Version tag convention:
+  #   develop branch  →  <sha>-dev   (e.g. a1b2c3d-dev)
+  #   vX.Y.Z tag      →  vX.Y.Z      (e.g. v1.2.3)
+  # Uploads the compiled browser bundle as the `dist` artifact for the deploy job.
+  # Runs on: develop branch and vX.Y.Z tags.
+  # ---------------------------------------------------------------------------
+  build:
+    name: Build
+    needs:
+      - init
+      - sonarqube-scan
+      - secret-scan
+    if: |
+      always() && (
+        github.ref_name == 'develop' ||
+        (github.ref_type == 'tag' && startsWith(github.ref_name, 'v')) 
+      )
+    runs-on: ${{ needs.init.outputs.runner_selected }}
+    container:
+      image: ${{ needs.init.outputs.image_node_unittest }}
+    outputs:
+      app_version: ${{ steps.tag.outputs.value }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Get short SHA
+        id: git
+        run: echo "sha_short=$(echo '${{ github.sha }}' | cut -c1-7)" >> $GITHUB_OUTPUT
+
+      - name: Determine deploy tag
+        id: tag
+        run: |
+          SHA="${{ steps.git.outputs.sha_short }}"
+          REF="${{ github.ref_name }}"
+          REF_TYPE="${{ github.ref_type }}"
+
+          if [[ "$REF" == "develop" ]]; then
+            # 1. develop branch -> abcd123-dev
+            echo "value=${SHA}-dev" >> $GITHUB_OUTPUT
+
+          elif [[ "$REF_TYPE" == "tag" && "$REF" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            # 2. Final PROD tags: vX.Y.Z -> vX.Y.Z
+            echo "value=${REF}" >> $GITHUB_OUTPUT
+          fi
+
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline || npm install
+
+      - name: Build production
+        run: npm run build
+        env:
+          CI: 'true'
+          CHROME_BIN: /usr/bin/chromium-browser
+          API_URL: ${{ secrets.API_URL }}
+          APP_NAME: ${{ needs.init.outputs.service_name }}
+          APP_VERSION: ${{ steps.tag.outputs.value }}
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: ${{ env.DIST_PATH }}
+          retention-days: 7
+
+  # ---------------------------------------------------------------------------
+  # STAGE 5 — Deploy to S3
+  # Downloads the `dist` artifact from Stage 4 and syncs it to the target S3
+  # bucket. Authenticates to AWS using aws-azure-login (Azure AD → AWS STS).
+  # Environment is resolved from the git ref:
+  #   develop branch  →  DEV  (S3_BUCKET_DEV  via ROLE_ARN_NONPROD)
+  #   vX.Y.Z tag      →  PROD (S3_BUCKET_PROD via ROLE_ARN_PROD)
+  #
+  # NOTE: The actual `aws s3 sync` and `aws s3 cp` commands are currently
+  # commented out. Uncomment them once the S3 bucket and IAM roles are ready.
+  # The active `aws s3 ls` line is a connectivity smoke-test only.
+  # Runs on: develop branch and vX.Y.Z tags.
+  # ---------------------------------------------------------------------------
+  deploy:
+    name: Deploy to S3
+    needs:
+      - init
+      - build
+    if: |
+      needs.build.result == 'success' && (
+        github.ref_name == 'develop' ||
+        (github.ref_type == 'tag' && startsWith(github.ref_name, 'v'))
+      )
+    runs-on: ${{ needs.init.outputs.runner_selected }}
+    container:
+      image: ${{ needs.init.outputs.image_aws_azure_login }}
+    permissions:
+      id-token: write
+      contents: read
+      packages: read
+    steps:
+      - name: Resolve target environment
+        id: env
+        shell: bash
+        run: |
+          REF="${{ github.ref_name }}"
+          REF_TYPE="${{ github.ref_type }}"
+          NAME=""
+          BUCKET=""
+          ROLE_ARN=""
+
+          if [[ "$REF" == "develop" ]]; then
+            # 1. develop -> DEV
+            NAME="develop"
+            BUCKET="${{ env.S3_BUCKET_DEV }}"
+            ROLE_ARN="${ROLE_ARN_NONPROD}"
+
+          elif [[ "$REF_TYPE" == "tag" && "$REF" != *-* ]]; then
+            # 2. vX.Y.Z -> Production
+            NAME="production"
+            BUCKET="${{ env.S3_BUCKET_PROD }}"
+            ROLE_ARN="${ROLE_ARN_PROD}"
+          else
+            echo "Unsupported ref for deploy: ${REF} (${REF_TYPE})" >&2
+            exit 1
+          fi
+
+          echo "name=${NAME}" >> $GITHUB_OUTPUT
+          echo "bucket=${BUCKET}" >> $GITHUB_OUTPUT
+          echo "role_arn=${ROLE_ARN}" >> $GITHUB_OUTPUT
+          
+      - name: Download build artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: ${{ env.DIST_PATH }}
+
+      - name: Configure AWS CLI
+        env:
+          PROFILE_ROLE_ARN: ${{ steps.env.outputs.role_arn }}
+        run: |
+          set -eu
+          echo "Configuring AWS CLI..."
+          mkdir -p ~/.aws
+          cat <<EOT > ~/.aws/config
+          [default]
+          azure_tenant_id=$AZURE_TENANT_ID
+          azure_app_id_uri=$AZURE_APP_ID_URI
+          azure_default_username=$AZURE_DEFAULT_USERNAME
+          azure_default_password="$AZURE_DEFAULT_PASSWORD"
+          azure_default_role_arn=$AZURE_DEFAULT_ROLE_ARN
+          azure_default_duration_hours=$AZURE_DEFAULT_DURATION_HOURS
+          azure_default_remember_me=$AZURE_DEFAULT_REMEMBER_ME
+          region=$REGION
+          [profile ${{ steps.env.outputs.name }}]
+          role_arn=$PROFILE_ROLE_ARN
+          source_profile=default
+          region=$REGION
+          EOT
+          chmod 600 ~/.aws/config
+
+      - name: Login to AWS via Azure AD
+        run: |
+          echo "Logging into AWS..."
+          echo "Using AWS profile: ${{ steps.env.outputs.name }}"
+          aws-azure-login --no-sandbox --no-prompt || { echo "Login failed"; exit 1; }
+
+      - name: Deploy to S3 
+        env:
+          BUCKET: ${{ steps.env.outputs.bucket }}
+        run: |
+          export AWS_PROFILE=${{ steps.env.outputs.name }}
+          aws s3 ls "s3://${BUCKET}"
+          aws s3 sync ${{ env.DIST_PATH }} "s3://${BUCKET}/" \
+            --delete \
+            --cache-control "max-age=31536000,immutable" \
+            --exclude "index.html"
+
+          aws s3 cp "${{ env.DIST_PATH }}index.html" "s3://${BUCKET}/index.html" \
+            --cache-control "no-cache,no-store,must-revalidate"
+
+
+      - name: Deployment summary
+        run: |
+          echo "### Deployment Complete" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment**: \`${{ steps.env.outputs.name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version**: \`${{ needs.build.outputs.app_version }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **S3 Bucket**: \`${{ steps.env.outputs.bucket }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY

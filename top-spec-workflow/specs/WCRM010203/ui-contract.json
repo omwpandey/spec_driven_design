@@ -1,0 +1,1035 @@
+{
+  "schemaVersion": "1.0",
+  "feature": {
+    "id": "WCRM010203",
+    "title": "Dealer Activity Maintenance - DCM Vehicle",
+    "summary": "UX-001 Init Mode only (Dealer Update Only). Add Mode is out of scope. API_Data_Map_Details is missing."
+  },
+  "sources": [
+    {
+      "id": "grill",
+      "type": "grill",
+      "title": "Agreed grill",
+      "reference": "specs/WCRM010203/grill.md",
+      "notes": "agreed Om Pandey; UX-001 only"
+    },
+    {
+      "id": "dr-page",
+      "type": "dr-page",
+      "title": "[WCRM010203] Dealer Activity Maintenance - DCM Vehicle",
+      "reference": "specs/WCRM010203/raw/page.md"
+    },
+    {
+      "id": "item-desc",
+      "type": "item-desc",
+      "title": "Item_Desc_DCM_VehicleDealer",
+      "reference": "specs/WCRM010203/raw/sheets/Item_Desc.md"
+    },
+    {
+      "id": "data-map",
+      "type": "data-map",
+      "title": "DATA_MAP_DCM_Vehicle_Dealer_WCRM010203",
+      "reference": "specs/WCRM010203/raw/sheets/DATA_MAP.md"
+    },
+    {
+      "id": "ux-init",
+      "type": "ux-image",
+      "title": "Init Mode — DCM Vehicle - Dealer Update Only",
+      "reference": "specs/WCRM010203/raw/images/DCM Vehicle - Dealer Update Only.png"
+    },
+    {
+      "id": "ux-design",
+      "type": "dr-page",
+      "title": "UX Design section captions",
+      "reference": "specs/WCRM010203/raw/ux-design.md"
+    },
+    {
+      "id": "developer-decision-001",
+      "type": "developer-decision",
+      "title": "New screen; ignore existing ActivitySetupPage",
+      "reference": "specs/WCRM010203/grill.json prior agreement"
+    },
+    {
+      "id": "developer-decision-002",
+      "type": "developer-decision",
+      "title": "UX-001 Init Mode only; drop UX-002 Add Mode",
+      "reference": "specs/WCRM010203/grill.json agreement.notes",
+      "notes": "Om Pandey 2026-08-30"
+    }
+  ],
+  "screen": {
+    "name": "Dealer Activity Maintenance - DCM Vehicle",
+    "route": null,
+    "modes": ["init"]
+  },
+  "fields": [
+    {
+      "id": "field.back",
+      "label": "Back",
+      "uiType": "button",
+      "section": "Header",
+      "modeBehavior": { "init": { "visible": true, "editable": true } },
+      "validation": [],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-001 Back" },
+        { "sourceId": "ux-init", "locator": "Back above Activity Type" }
+      ]
+    },
+    {
+      "id": "field.activityType",
+      "label": "Activity Type Selection",
+      "uiType": "radio",
+      "section": "Activity Type",
+      "modeBehavior": { "init": { "visible": true, "editable": true } },
+      "validation": [
+        {
+          "id": "VAL-ACTIVITY-TYPE-REQ",
+          "rule": "required",
+          "value": true,
+          "message": "ERR0001 - {field} is required.",
+          "sourceRefs": [
+            { "sourceId": "dr-page", "locator": "Activity Type is mandatory" },
+            { "sourceId": "item-desc", "locator": "UI-DCM-002 Mandatory Y" }
+          ]
+        }
+      ],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-002 Radio; EVT-001 edit mode other types disabled" },
+        { "sourceId": "ux-init", "locator": "Radios Periodic Maintenance … Body & Paint; DCM Vehicle selected" }
+      ]
+    },
+    {
+      "id": "field.summary.totalVehicles",
+      "label": "Total Vehicles in Database",
+      "uiType": "display",
+      "section": "Dealer Vehicle Summary",
+      "modeBehavior": { "init": { "visible": true, "editable": false } },
+      "validation": [],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-003" },
+        { "sourceId": "ux-init", "locator": "Summary card 60,000" },
+        { "sourceId": "dr-page", "locator": "Dealer Vehicle Summary Section" }
+      ]
+    },
+    {
+      "id": "field.summary.individualCustomers",
+      "label": "Total Individual Customers",
+      "uiType": "display",
+      "section": "Dealer Vehicle Summary",
+      "modeBehavior": { "init": { "visible": true, "editable": false } },
+      "validation": [],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-004" },
+        { "sourceId": "ux-init", "locator": "Summary card with percentage" },
+        { "sourceId": "dr-page", "locator": "percentage vs Total Customers" }
+      ]
+    },
+    {
+      "id": "field.summary.corporateCustomers",
+      "label": "Total Corporate Customers",
+      "uiType": "display",
+      "section": "Dealer Vehicle Summary",
+      "modeBehavior": { "init": { "visible": true, "editable": false } },
+      "validation": [],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-005" },
+        { "sourceId": "ux-init", "locator": "Summary card with percentage" },
+        { "sourceId": "dr-page", "locator": "percentage vs Total Customers" }
+      ]
+    },
+    {
+      "id": "field.activityId",
+      "label": "Activity ID",
+      "uiType": "text",
+      "section": "Activity Setup",
+      "modeBehavior": { "init": { "visible": true, "editable": false } },
+      "validation": [],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-006 read-only" },
+        { "sourceId": "ux-init", "locator": "Activity ID AV260001" }
+      ]
+    },
+    {
+      "id": "field.activityName",
+      "label": "Activity Name",
+      "uiType": "text",
+      "section": "Activity Setup",
+      "modeBehavior": { "init": { "visible": true, "editable": true } },
+      "validation": [
+        {
+          "id": "VAL-ACTIVITY-NAME-REQ",
+          "rule": "required",
+          "value": true,
+          "message": "ERR0001 - {field} is required.",
+          "sourceRefs": [
+            { "sourceId": "dr-page", "locator": "Activity Name mandatory" },
+            { "sourceId": "item-desc", "locator": "UI-DCM-007 Mandatory Y" },
+            { "sourceId": "ux-init", "locator": "required marker on Activity Name" }
+          ]
+        },
+        {
+          "id": "VAL-ACTIVITY-NAME-MAX",
+          "rule": "maxLength",
+          "value": 250,
+          "message": "Activity Name must not exceed 250 characters",
+          "sourceRefs": [
+            { "sourceId": "dr-page", "locator": "max 250" },
+            { "sourceId": "item-desc", "locator": "UI-DCM-007 Length 250" }
+          ]
+        }
+      ],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-007 Behavior Read-only auto-populated" },
+        { "sourceId": "dr-page", "locator": "Edit Mode Activity Name not editable" },
+        { "sourceId": "ux-init", "locator": "Activity Name value DCM Vehicle with required marker" }
+      ]
+    },
+    {
+      "id": "field.activityDescription",
+      "label": "Activity Description",
+      "uiType": "text",
+      "section": "Activity Setup",
+      "modeBehavior": { "init": { "visible": true, "editable": true } },
+      "validation": [
+        {
+          "id": "VAL-ACTIVITY-DESC-REQ",
+          "rule": "required",
+          "value": true,
+          "message": "ERR0001 - {field} is required.",
+          "sourceRefs": [
+            { "sourceId": "dr-page", "locator": "Description mandatory" },
+            { "sourceId": "item-desc", "locator": "UI-DCM-008 Mandatory Y" },
+            { "sourceId": "ux-init", "locator": "required marker" }
+          ]
+        },
+        {
+          "id": "VAL-ACTIVITY-DESC-MAX",
+          "rule": "maxLength",
+          "value": 1000,
+          "message": "Activity Description must not exceed 1000 characters",
+          "sourceRefs": [
+            { "sourceId": "dr-page", "locator": "max 1000" },
+            { "sourceId": "item-desc", "locator": "UI-DCM-008 Length 1000" }
+          ]
+        }
+      ],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-008; EVT-003" },
+        { "sourceId": "ux-init", "locator": "empty Activity Description" }
+      ]
+    },
+    {
+      "id": "field.customerType",
+      "label": "Customer Type",
+      "uiType": "select",
+      "section": "Activity Setup",
+      "modeBehavior": { "init": { "visible": true, "editable": true } },
+      "validation": [
+        {
+          "id": "VAL-CUSTOMER-TYPE-REQ",
+          "rule": "required",
+          "value": true,
+          "message": "ERR0001 - {field} is required.",
+          "sourceRefs": [
+            { "sourceId": "dr-page", "locator": "Customer Type mandatory" },
+            { "sourceId": "item-desc", "locator": "UI-DCM-009 CMB-001" },
+            { "sourceId": "ux-init", "locator": "required empty dropdown" }
+          ]
+        }
+      ],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-009; EVT-004" }
+      ]
+    },
+    {
+      "id": "field.suppressDays",
+      "label": "Suppress Days",
+      "uiType": "number",
+      "section": "Activity Setup",
+      "modeBehavior": { "init": { "visible": true, "editable": true } },
+      "validation": [
+        {
+          "id": "VAL-SUPPRESS-DAYS-REQ",
+          "rule": "required",
+          "value": true,
+          "message": "ERR0001 - {field} is required.",
+          "sourceRefs": [
+            { "sourceId": "item-desc", "locator": "UI-DCM-010 Mandatory Y default 90" },
+            { "sourceId": "ux-init", "locator": "value 90 with required marker" }
+          ]
+        },
+        {
+          "id": "VAL-SUPPRESS-DAYS-RANGE",
+          "rule": "range",
+          "value": { "min": 0, "max": 90 },
+          "message": "ERR0020 - {field} must be between {min} and {max}.",
+          "sourceRefs": [
+            { "sourceId": "dr-page", "locator": "Suppress Days 0 to 90" }
+          ]
+        }
+      ],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-010" },
+        { "sourceId": "dr-page", "locator": "default 90 days" }
+      ]
+    },
+    {
+      "id": "field.dcmItem.select",
+      "label": "Select Item",
+      "uiType": "checkbox",
+      "section": "DCM Vehicle Item",
+      "modeBehavior": { "init": { "visible": true, "editable": true } },
+      "validation": [
+        {
+          "id": "VAL-DCM-ITEM-MIN-ONE",
+          "rule": "minSelected",
+          "value": 1,
+          "message": "At least one DCM Vehicle Item must be selected before saving.",
+          "sourceRefs": [
+            { "sourceId": "dr-page", "locator": "at least one DCM Vehicle Item" },
+            { "sourceId": "item-desc", "locator": "EVT-014" }
+          ]
+        }
+      ],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-011; EVT-005" },
+        { "sourceId": "ux-init", "locator": "row checkbox checked" }
+      ]
+    },
+    {
+      "id": "field.dcmItem.no",
+      "label": "No.",
+      "uiType": "display",
+      "section": "DCM Vehicle Item",
+      "modeBehavior": { "init": { "visible": true, "editable": false } },
+      "validation": [],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-012" },
+        { "sourceId": "ux-init", "locator": "column No." }
+      ]
+    },
+    {
+      "id": "field.dcmItem.status",
+      "label": "Status",
+      "uiType": "display",
+      "section": "DCM Vehicle Item",
+      "modeBehavior": { "init": { "visible": true, "editable": false } },
+      "validation": [],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-013 DEL/UPD" },
+        { "sourceId": "ux-init", "locator": "STATUS ADD" }
+      ]
+    },
+    {
+      "id": "field.dcmItem.items",
+      "label": "Items",
+      "uiType": "display",
+      "section": "DCM Vehicle Item",
+      "modeBehavior": { "init": { "visible": true, "editable": false } },
+      "validation": [],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-014" },
+        { "sourceId": "ux-init", "locator": "ITEMS required column" }
+      ]
+    },
+    {
+      "id": "field.dcmItem.mileage",
+      "label": "Mileage",
+      "uiType": "display",
+      "section": "DCM Vehicle Item",
+      "modeBehavior": { "init": { "visible": true, "editable": false } },
+      "validation": [],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-015" },
+        { "sourceId": "ux-init", "locator": "MILEAGE column" }
+      ]
+    },
+    {
+      "id": "field.dcmItem.duration",
+      "label": "Duration/Period",
+      "uiType": "display",
+      "section": "DCM Vehicle Item",
+      "modeBehavior": { "init": { "visible": true, "editable": false } },
+      "validation": [],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-016" },
+        { "sourceId": "ux-init", "locator": "DURATION/PERIOD column" }
+      ]
+    },
+    {
+      "id": "field.dcmItem.mandatory",
+      "label": "Mandatory",
+      "uiType": "display",
+      "section": "DCM Vehicle Item",
+      "modeBehavior": { "init": { "visible": true, "editable": false } },
+      "validation": [],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-017" },
+        { "sourceId": "ux-init", "locator": "MANDATORY column" }
+      ]
+    },
+    {
+      "id": "field.channel.add",
+      "label": "Add Contact Channel",
+      "uiType": "button",
+      "section": "Contact Channel Details",
+      "modeBehavior": { "init": { "visible": true, "editable": true } },
+      "validation": [],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-018; EVT-006" },
+        { "sourceId": "ux-init", "locator": "+ Add on Contact Channel Details" }
+      ]
+    },
+    {
+      "id": "field.channel.no",
+      "label": "No.",
+      "uiType": "display",
+      "section": "Contact Channel Details",
+      "modeBehavior": { "init": { "visible": true, "editable": false } },
+      "validation": [],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-019" },
+        { "sourceId": "ux-init", "locator": "No. column" }
+      ]
+    },
+    {
+      "id": "field.channel.status",
+      "label": "Status",
+      "uiType": "display",
+      "section": "Contact Channel Details",
+      "modeBehavior": { "init": { "visible": true, "editable": false } },
+      "validation": [],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-020 ADD/UPD/DEL" },
+        { "sourceId": "ux-init", "locator": "STATUS ADD and UPD" }
+      ]
+    },
+    {
+      "id": "field.channel.contactProcess",
+      "label": "Contact Process",
+      "uiType": "select",
+      "section": "Contact Channel Details",
+      "modeBehavior": { "init": { "visible": true, "editable": true } },
+      "validation": [
+        {
+          "id": "VAL-CONTACT-PROCESS-REQ",
+          "rule": "required",
+          "value": true,
+          "message": "ERR0001 - {field} is required.",
+          "sourceRefs": [
+            { "sourceId": "dr-page", "locator": "Contact Process mandatory" },
+            { "sourceId": "item-desc", "locator": "UI-DCM-021 CMB-002" },
+            { "sourceId": "ux-init", "locator": "CONTACT PROCESS required column" }
+          ]
+        }
+      ],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-021; EVT-007" },
+        { "sourceId": "ux-init", "locator": "Service Follow-up and Appointment Confirmation values" }
+      ]
+    },
+    {
+      "id": "field.channel.channel",
+      "label": "Channel",
+      "uiType": "select",
+      "section": "Contact Channel Details",
+      "modeBehavior": { "init": { "visible": true, "editable": true } },
+      "validation": [
+        {
+          "id": "VAL-CHANNEL-REQ",
+          "rule": "required",
+          "value": true,
+          "message": "ERR0001 - {field} is required.",
+          "sourceRefs": [
+            { "sourceId": "dr-page", "locator": "Channel mandatory" },
+            { "sourceId": "item-desc", "locator": "UI-DCM-022 CMB-003" }
+          ]
+        },
+        {
+          "id": "VAL-CHANNEL-PROCESS-UNIQUE",
+          "rule": "uniquePair",
+          "value": ["contactProcess", "channel"],
+          "message": "ERR0005 - Duplicate record exists.",
+          "sourceRefs": [
+            { "sourceId": "dr-page", "locator": "Duplicate Contact Process + Channel not allowed" },
+            { "sourceId": "item-desc", "locator": "EVT-014 ERR0005" }
+          ]
+        }
+      ],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-022; EVT-008" },
+        { "sourceId": "ux-init", "locator": "Call Out, Email, SMS, Line OA" }
+      ]
+    },
+    {
+      "id": "field.channel.activityDay",
+      "label": "Activity Day",
+      "uiType": "number",
+      "section": "Contact Channel Details",
+      "modeBehavior": { "init": { "visible": true, "editable": true } },
+      "validation": [
+        {
+          "id": "VAL-ACTIVITY-DAY-REQ",
+          "rule": "required",
+          "value": true,
+          "message": "ERR0001 - {field} is required.",
+          "sourceRefs": [
+            { "sourceId": "dr-page", "locator": "Activity Day mandatory" },
+            { "sourceId": "item-desc", "locator": "UI-DCM-023" }
+          ]
+        },
+        {
+          "id": "VAL-ACTIVITY-DAY-NUMERIC",
+          "rule": "numeric",
+          "value": true,
+          "message": "Activity Day must contain numeric values only.",
+          "sourceRefs": [
+            { "sourceId": "dr-page", "locator": "numeric values only" }
+          ]
+        }
+      ],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-023; EVT-009 range conflict" },
+        { "sourceId": "ux-init", "locator": "values -30, -25, -19, -1" }
+      ]
+    },
+    {
+      "id": "field.channel.assignGroup",
+      "label": "Assign Group",
+      "uiType": "select",
+      "section": "Contact Channel Details",
+      "modeBehavior": { "init": { "visible": true, "editable": true } },
+      "validation": [
+        {
+          "id": "VAL-ASSIGN-GROUP-REQ",
+          "rule": "requiredWhen",
+          "value": { "channel": "Call Out" },
+          "message": "ERR0001 - {field} is required.",
+          "sourceRefs": [
+            { "sourceId": "dr-page", "locator": "Assign Group only for Call Out" },
+            { "sourceId": "ux-init", "locator": "value on Call Out row; empty on Email/SMS/Line OA" },
+            { "sourceId": "item-desc", "locator": "UI-DCM-024 Mandatory Y" }
+          ]
+        }
+      ],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-024 CMB-004; EVT-010" }
+      ]
+    },
+    {
+      "id": "field.channel.deleteRow",
+      "label": "Action",
+      "uiType": "icon-button",
+      "section": "Contact Channel Details",
+      "modeBehavior": { "init": { "visible": true, "editable": true } },
+      "validation": [],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-025; EVT-011" },
+        { "sourceId": "ux-init", "locator": "trash icon per row" }
+      ]
+    },
+    {
+      "id": "field.deleteActivity",
+      "label": "Delete Activity",
+      "uiType": "button",
+      "section": "Footer",
+      "modeBehavior": { "init": { "visible": true, "editable": true } },
+      "validation": [],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-026 API_004" },
+        { "sourceId": "ux-init", "locator": "footer Delete Activity" }
+      ]
+    },
+    {
+      "id": "field.setTemplate",
+      "label": "Set Template",
+      "uiType": "button",
+      "section": "Footer",
+      "modeBehavior": { "init": { "visible": true, "editable": true } },
+      "validation": [],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-027; EVT-013" },
+        { "sourceId": "ux-init", "locator": "footer Set Template" }
+      ]
+    },
+    {
+      "id": "field.save",
+      "label": "Save",
+      "uiType": "button",
+      "section": "Footer",
+      "modeBehavior": { "init": { "visible": true, "editable": true } },
+      "validation": [],
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-028 API_003; EVT-014" },
+        { "sourceId": "ux-init", "locator": "footer Save" }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "id": "action.evt001.load",
+      "label": "EVT-001 On Load",
+      "trigger": { "type": "load" },
+      "preconditions": ["User is logged in and has access to Setup Activity by Dealer."],
+      "frontendValidations": [],
+      "onValidationFailure": null,
+      "specifiedAction": "Load existing DCM Vehicle setup via API_001, items via API_002, masters, and summary. This pass is Init/Update Only — do not implement Add Mode entry. Activity Type lock in edit vs all radios visible on UX-001 is a conflict.",
+      "onSuccess": "Existing configuration, items, channels, and summary displayed.",
+      "onFailure": "Not specified.",
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "EVT-001" },
+        { "sourceId": "ux-init", "locator": "loaded form with AV260001 and channel rows" },
+        { "sourceId": "developer-decision-002", "locator": "Init Mode only" }
+      ]
+    },
+    {
+      "id": "action.evt002.changeActivityType",
+      "label": "EVT-002 On Change – Activity Type",
+      "trigger": { "type": "change", "fieldId": "field.activityType" },
+      "preconditions": ["Activity Type section is displayed."],
+      "frontendValidations": [],
+      "onValidationFailure": null,
+      "specifiedAction": "If unsaved changes, confirm WRN0001 then load API_001/API_002 for the selected type.",
+      "onSuccess": "Selected type configuration loaded.",
+      "onFailure": "WRN0004",
+      "confirmation": { "required": true, "message": "WRN0001 - Changes have not been saved. Are you sure you want to leave this page?" },
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "EVT-002" }]
+    },
+    {
+      "id": "action.evt003.changeDescription",
+      "label": "EVT-003 On Change – Activity Description",
+      "trigger": { "type": "change", "fieldId": "field.activityDescription" },
+      "preconditions": ["Activity Setup section is displayed."],
+      "frontendValidations": ["VAL-ACTIVITY-DESC-MAX"],
+      "onValidationFailure": "Message beside the field.",
+      "specifiedAction": "Retain description in memory until API_003.",
+      "onSuccess": "Value retained in memory.",
+      "onFailure": null,
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "EVT-003" }]
+    },
+    {
+      "id": "action.evt004.changeCustomerType",
+      "label": "EVT-004 On Change – Customer Type",
+      "trigger": { "type": "change", "fieldId": "field.customerType" },
+      "preconditions": ["Activity Setup section is displayed."],
+      "frontendValidations": ["VAL-CUSTOMER-TYPE-REQ"],
+      "onValidationFailure": "ERR0001 - {field} is required.",
+      "specifiedAction": "Assign Customer Type from CMB-001; persist on save.",
+      "onSuccess": "Type assigned in memory.",
+      "onFailure": null,
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "EVT-004" }]
+    },
+    {
+      "id": "action.evt005.toggleDcmItem",
+      "label": "EVT-005 On Check/Uncheck – DCM Vehicle Item",
+      "trigger": { "type": "change", "fieldId": "field.dcmItem.select" },
+      "preconditions": ["DCM Vehicle Item records are loaded."],
+      "frontendValidations": [],
+      "onValidationFailure": null,
+      "specifiedAction": "Update selection in memory; persist on API_003.",
+      "onSuccess": "Selection updated.",
+      "onFailure": null,
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "EVT-005" }]
+    },
+    {
+      "id": "action.evt006.addContactChannel",
+      "label": "EVT-006 On Click – Add Contact Channel",
+      "trigger": { "type": "click", "fieldId": "field.channel.add" },
+      "preconditions": ["Contact Channel Details section is displayed."],
+      "frontendValidations": [],
+      "onValidationFailure": null,
+      "specifiedAction": "Add editable row, next sequence, Status ADD. Persist on API_003.",
+      "onSuccess": "New row available.",
+      "onFailure": null,
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "EVT-006" },
+        { "sourceId": "ux-init", "locator": "+ Add" }
+      ]
+    },
+    {
+      "id": "action.evt007.changeContactProcess",
+      "label": "EVT-007 On Change – Contact Process",
+      "trigger": { "type": "change", "fieldId": "field.channel.contactProcess" },
+      "preconditions": ["Contact Channel row exists."],
+      "frontendValidations": ["VAL-CONTACT-PROCESS-REQ"],
+      "onValidationFailure": "ERR0001 - {field} is required.",
+      "specifiedAction": "Appointment Confirmation sets Activity Day -1 read-only. Service Follow-up stays editable.",
+      "onSuccess": "Process and Activity Day rules applied.",
+      "onFailure": null,
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "EVT-007" },
+        { "sourceId": "ux-init", "locator": "Appointment Confirmation rows show -1" }
+      ]
+    },
+    {
+      "id": "action.evt008.changeChannel",
+      "label": "EVT-008 On Change – Channel",
+      "trigger": { "type": "change", "fieldId": "field.channel.channel" },
+      "preconditions": ["Contact Channel row exists and Contact Process is selected."],
+      "frontendValidations": ["VAL-CHANNEL-REQ", "VAL-CHANNEL-PROCESS-UNIQUE"],
+      "onValidationFailure": "ERR0001 or ERR0005.",
+      "specifiedAction": "Assign Channel (CMB-003). Assign Group enablement follows Call Out rule (page + UX); Item_Desc disagrees.",
+      "onSuccess": "Channel assigned.",
+      "onFailure": null,
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "EVT-008" },
+        { "sourceId": "ux-init", "locator": "Call Out has Assign Group; others empty" }
+      ]
+    },
+    {
+      "id": "action.evt009.changeActivityDay",
+      "label": "EVT-009 On Change – Activity Day",
+      "trigger": { "type": "change", "fieldId": "field.channel.activityDay" },
+      "preconditions": ["Contact Channel row exists."],
+      "frontendValidations": ["VAL-ACTIVITY-DAY-REQ", "VAL-ACTIVITY-DAY-NUMERIC"],
+      "onValidationFailure": "ERR0001 or ERR0020. Range is a conflict.",
+      "specifiedAction": "Store Activity Day. UX-001 shows -30, -25, -19, -1. Do not invent a range until OQ-ACTIVITY-DAY-RANGE is resolved.",
+      "onSuccess": "Value updated.",
+      "onFailure": "ERR0020",
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "EVT-009" },
+        { "sourceId": "ux-init", "locator": "Activity Day column values" }
+      ]
+    },
+    {
+      "id": "action.evt010.changeAssignGroup",
+      "label": "EVT-010 On Change – Assign Group",
+      "trigger": { "type": "change", "fieldId": "field.channel.assignGroup" },
+      "preconditions": ["Contact Channel row exists."],
+      "frontendValidations": ["VAL-ASSIGN-GROUP-REQ"],
+      "onValidationFailure": "ERR0001 - {field} is required.",
+      "specifiedAction": "Assign group from CMB-004.",
+      "onSuccess": "Group assigned.",
+      "onFailure": null,
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "EVT-010" }]
+    },
+    {
+      "id": "action.evt011.deleteContactChannel",
+      "label": "EVT-011 On Click – Delete Contact Channel",
+      "trigger": { "type": "click", "fieldId": "field.channel.deleteRow" },
+      "preconditions": ["User selects a valid Contact Channel row."],
+      "frontendValidations": [],
+      "onValidationFailure": null,
+      "specifiedAction": "Confirm WRN0002. Existing rows DEL; unsaved ADD removed. Persist on API_003.",
+      "onSuccess": "Row marked or removed.",
+      "onFailure": "WRN0002",
+      "confirmation": { "required": true, "message": "WRN0002 - Are you sure to delete data?" },
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "EVT-011" }]
+    },
+    {
+      "id": "action.evt012.deleteActivity",
+      "label": "EVT-012 On Click – Delete Activity",
+      "trigger": { "type": "click", "fieldId": "field.deleteActivity" },
+      "preconditions": ["Existing DCM Vehicle activity configuration exists."],
+      "frontendValidations": [],
+      "onValidationFailure": null,
+      "specifiedAction": "Confirm WRN0003, API_004 INACTIVE, keep existing call plans, stop future, return to Activity List.",
+      "onSuccess": "Activity deleted successfully.",
+      "onFailure": "WRN0002",
+      "confirmation": {
+        "required": true,
+        "message": "WRN0003 - After deletion of activity, system will stop generating the call plan. Do you want to delete this activity?"
+      },
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "EVT-012" }, { "sourceId": "dr-page", "locator": "Delete Activity" }]
+    },
+    {
+      "id": "action.evt013.setTemplate",
+      "label": "EVT-013 On Click – Set Template",
+      "trigger": { "type": "click", "fieldId": "field.setTemplate" },
+      "preconditions": ["Activity Setup screen is displayed."],
+      "frontendValidations": [],
+      "onValidationFailure": "ERR0024 - Template is required for {channel}.",
+      "specifiedAction": "Open template UI. Item_Desc vs DR page disagree — see CF-SET-TEMPLATE. Do not invent which behavior.",
+      "onSuccess": "Not consistently specified.",
+      "onFailure": "ERR0024",
+      "confirmation": { "required": true, "message": "WRN0001 - Changes have not been saved. Are you sure you want to leave this page?" },
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "EVT-013" }, { "sourceId": "dr-page", "locator": "Set Template Operation" }]
+    },
+    {
+      "id": "action.evt014.save",
+      "label": "EVT-014 On Click – Save",
+      "trigger": { "type": "click", "fieldId": "field.save" },
+      "preconditions": [
+        "Activity Type selected",
+        "Mandatory Activity Setup complete",
+        "At least one DCM Vehicle Item selected",
+        "At least one Contact Channel with required fields"
+      ],
+      "frontendValidations": [
+        "VAL-ACTIVITY-TYPE-REQ",
+        "VAL-ACTIVITY-NAME-REQ",
+        "VAL-ACTIVITY-NAME-MAX",
+        "VAL-ACTIVITY-DESC-REQ",
+        "VAL-ACTIVITY-DESC-MAX",
+        "VAL-CUSTOMER-TYPE-REQ",
+        "VAL-SUPPRESS-DAYS-REQ",
+        "VAL-SUPPRESS-DAYS-RANGE",
+        "VAL-DCM-ITEM-MIN-ONE",
+        "VAL-CONTACT-PROCESS-REQ",
+        "VAL-CHANNEL-REQ",
+        "VAL-CHANNEL-PROCESS-UNIQUE",
+        "VAL-ACTIVITY-DAY-REQ",
+        "VAL-ACTIVITY-DAY-NUMERIC",
+        "VAL-ASSIGN-GROUP-REQ"
+      ],
+      "onValidationFailure": "Save blocked; message beside field. Missing channel templates may also block (page).",
+      "specifiedAction": "Confirm, persist via API_003, process ADD/UPD/DEL, version check.",
+      "onSuccess": "HTTP 200; DCM Activity Setup configured successfully.",
+      "onFailure": "ERR0001, ERR0005, ERR0013, ERR0020, ERR0003, ERR0004, ERR0012, ERR0024",
+      "confirmation": { "required": true, "message": "Do you want to save the DCM Vehicle configuration?" },
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "EVT-014" }, { "sourceId": "dr-page", "locator": "Save Operation" }]
+    },
+    {
+      "id": "action.evt015.navigateAway",
+      "label": "EVT-015 On Navigate Away With Unsaved Changes",
+      "trigger": { "type": "navigate" },
+      "preconditions": ["Unsaved changes exist on screen."],
+      "frontendValidations": [],
+      "onValidationFailure": null,
+      "specifiedAction": "WRN0001; confirm discards; cancel stays.",
+      "onSuccess": "User remains or leaves as chosen.",
+      "onFailure": "WRN0004",
+      "confirmation": { "required": true, "message": "WRN0001 - Changes have not been saved. Are you sure you want to leave this page?" },
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "EVT-015" }, { "sourceId": "dr-page", "locator": "Exit Operation" }]
+    },
+    {
+      "id": "action.back",
+      "label": "Back",
+      "trigger": { "type": "click", "fieldId": "field.back" },
+      "preconditions": [],
+      "frontendValidations": [],
+      "onValidationFailure": null,
+      "specifiedAction": "Return to Activity List. Unsaved changes use EVT-015 confirm.",
+      "onSuccess": "Activity List.",
+      "onFailure": null,
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-001" },
+        { "sourceId": "ux-init", "locator": "Back; breadcrumb Activity List" }
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "state.initial",
+      "name": "Init / loaded update",
+      "description": "After EVT-001 for UX-001. Existing Activity ID and channel rows visible.",
+      "sourceRefs": [
+        { "sourceId": "ux-init", "locator": "loaded Update Only mockup" },
+        { "sourceId": "item-desc", "locator": "EVT-001" }
+      ]
+    },
+    {
+      "id": "state.unsaved",
+      "name": "Unsaved changes",
+      "description": "In-memory edits not saved via API_003.",
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "EVT-015" }]
+    },
+    {
+      "id": "state.validationFailed",
+      "name": "Validation failed",
+      "description": "Save blocked; message beside field.",
+      "sourceRefs": [{ "sourceId": "dr-page", "locator": "Save Behavior" }]
+    },
+    {
+      "id": "state.confirm",
+      "name": "Confirmation dialog",
+      "description": "Unsaved leave, delete row, delete activity, or save.",
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "EVT confirmation messages" }]
+    }
+  ],
+  "permissions": [
+    {
+      "id": "perm.screenAccess",
+      "statement": "User must be logged in and have access to Setup Activity by Dealer.",
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "EVT-001 Pre_Condition" }]
+    },
+    {
+      "id": "perm.footerActions",
+      "statement": "Add Contact Channel, Delete Activity, and Save enabled according to user permissions. Role matrix not in fetch.",
+      "sourceRefs": [{ "sourceId": "dr-page", "locator": "Enable / Disable" }]
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "AC-001",
+      "statement": "Init Mode shows Activity Type (DCM Vehicle selected), three summary cards, Activity Setup including read-only Activity ID, DCM Vehicle Item grid, Contact Channel Details, and footer Delete / Set Template / Save.",
+      "sourceRefs": [
+        { "sourceId": "ux-init", "locator": "full Init Mode layout" },
+        { "sourceId": "developer-decision-002", "locator": "UX-001 only" }
+      ]
+    },
+    {
+      "id": "AC-002",
+      "statement": "Individual and Corporate summary cards show count and percentage as on the DR page and mockup.",
+      "sourceRefs": [
+        { "sourceId": "dr-page", "locator": "Dealer Vehicle Summary percentages" },
+        { "sourceId": "ux-init", "locator": "85% / 15%" }
+      ]
+    },
+    {
+      "id": "AC-003",
+      "statement": "Activity ID is read-only on Init Mode.",
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-006" },
+        { "sourceId": "ux-init", "locator": "AV260001" }
+      ]
+    },
+    {
+      "id": "AC-004",
+      "statement": "Suppress Days default 90 and save range 0–90.",
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-010" },
+        { "sourceId": "ux-init", "locator": "90" }
+      ]
+    },
+    {
+      "id": "AC-005",
+      "statement": "Save requires at least one selected DCM item and at least one contact channel with required process, channel, and activity day.",
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "EVT-014" }, { "sourceId": "dr-page", "locator": "Submit Validations" }]
+    },
+    {
+      "id": "AC-006",
+      "statement": "Duplicate Contact Process + Channel cannot be saved.",
+      "sourceRefs": [{ "sourceId": "dr-page", "locator": "duplicate pair" }, { "sourceId": "item-desc", "locator": "ERR0005" }]
+    },
+    {
+      "id": "AC-007",
+      "statement": "Appointment Confirmation uses Activity Day -1.",
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "EVT-007" }, { "sourceId": "ux-init", "locator": "-1 on Appointment Confirmation rows" }]
+    },
+    {
+      "id": "AC-008",
+      "statement": "Delete Activity after WRN0003 uses API_004 and returns to Activity List.",
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "EVT-012" }]
+    },
+    {
+      "id": "AC-009",
+      "statement": "Back or leave with unsaved changes shows WRN0001.",
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "EVT-015; UI-DCM-001" }]
+    },
+    {
+      "id": "AC-010",
+      "statement": "This implementation pass does not include Add Mode (UX-002).",
+      "sourceRefs": [{ "sourceId": "developer-decision-002", "locator": "Dropped UX-002" }]
+    }
+  ],
+  "conflicts": [
+    {
+      "id": "CF-ACTIVITY-DAY-RANGE",
+      "status": "open",
+      "summary": "DR page Service Follow-Up Activity Day -30 to -1; Item_Desc -30 to +30. UX-001 shows -30, -25, -19, -1 (does not resolve the max).",
+      "sourceRefs": [
+        { "sourceId": "dr-page", "locator": "-30 and -1" },
+        { "sourceId": "item-desc", "locator": "-30 to +30" },
+        { "sourceId": "ux-init", "locator": "sample values" }
+      ]
+    },
+    {
+      "id": "CF-ACTIVITY-NAME-EDIT",
+      "status": "open",
+      "summary": "Item_Desc: Activity Name read-only. DR page: not editable in Edit, editable in ADD (out of scope). UX-001 shows a required text field with value DCM Vehicle (editability not proven).",
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "UI-DCM-007 Read-only" },
+        { "sourceId": "dr-page", "locator": "Edit vs ADD" },
+        { "sourceId": "ux-init", "locator": "Activity Name field" }
+      ]
+    },
+    {
+      "id": "CF-ASSIGN-GROUP-MANDATORY",
+      "status": "open",
+      "summary": "DR page and UX-001: Assign Group filled on Call Out only, empty on Email/SMS/Line OA. Item_Desc Mandatory Y for every row.",
+      "sourceRefs": [
+        { "sourceId": "dr-page", "locator": "Call Out only" },
+        { "sourceId": "ux-init", "locator": "empty Assign Group on non-Call Out" },
+        { "sourceId": "item-desc", "locator": "UI-DCM-024 Mandatory Y" }
+      ]
+    },
+    {
+      "id": "CF-SET-TEMPLATE",
+      "status": "open",
+      "summary": "Item_Desc: populate contact-channel grid from a template. DR page: author SMS/Email/Line OA content; Save requires templates.",
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "EVT-013" },
+        { "sourceId": "dr-page", "locator": "Set Template Operation" }
+      ]
+    },
+    {
+      "id": "CF-ACTIVITY-TYPE-LOCK",
+      "status": "open",
+      "summary": "EVT-001: in Edit Mode other Activity Types are disabled. UX-001 Init/Update Only shows all type radios with DCM Vehicle selected (lock not visible).",
+      "sourceRefs": [
+        { "sourceId": "item-desc", "locator": "EVT-001 Edit Mode" },
+        { "sourceId": "ux-init", "locator": "all activity types shown" }
+      ]
+    },
+    {
+      "id": "CF-ACTIVITY-ID-FORMAT",
+      "status": "open",
+      "summary": "DR example AV260001; Item_Desc 2-digit prefix + YY + 4-digit sequence. UX-001 shows AV260001.",
+      "sourceRefs": [
+        { "sourceId": "dr-page", "locator": "Save Operation ID format" },
+        { "sourceId": "item-desc", "locator": "UI-DCM-006" },
+        { "sourceId": "ux-init", "locator": "AV260001" }
+      ]
+    }
+  ],
+  "openQuestions": [
+    {
+      "id": "OQ-API-MAP",
+      "blocking": true,
+      "question": "What are paths, methods, and payloads for API_001–007 and CMB-001–004 / ACTIVITY_TYPE_API?",
+      "sourceRefs": [{ "sourceId": "grill", "locator": "missing API_Data_Map_Details_*" }]
+    },
+    {
+      "id": "OQ-ACTIVITY-DAY-RANGE",
+      "blocking": true,
+      "question": "Which Service Follow-Up Activity Day max: -1 (page) or +30 (Item_Desc)? UX-001 samples do not decide.",
+      "sourceRefs": [{ "sourceId": "dr-page", "locator": "CF-ACTIVITY-DAY-RANGE" }]
+    },
+    {
+      "id": "OQ-ACTIVITY-NAME-ADD",
+      "blocking": true,
+      "question": "On Init Mode, is Activity Name editable or read-only?",
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "CF-ACTIVITY-NAME-EDIT" }]
+    },
+    {
+      "id": "OQ-ASSIGN-GROUP",
+      "blocking": true,
+      "question": "Is Assign Group required only for Call Out (page + UX-001) or on every row (Item_Desc)?",
+      "sourceRefs": [{ "sourceId": "ux-init", "locator": "CF-ASSIGN-GROUP-MANDATORY" }]
+    },
+    {
+      "id": "OQ-SET-TEMPLATE",
+      "blocking": true,
+      "question": "Does Set Template populate the channel grid or open a message-template editor?",
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "CF-SET-TEMPLATE" }]
+    },
+    {
+      "id": "OQ-PERMISSIONS",
+      "blocking": true,
+      "question": "What role matrix enables View, Add channel, Save, and Delete Activity?",
+      "sourceRefs": [{ "sourceId": "dr-page", "locator": "user permissions" }]
+    },
+    {
+      "id": "OQ-ACTIVITY-TYPE-LOCK",
+      "blocking": true,
+      "question": "On Init Mode, are non-DCM Activity Types disabled (EVT-001 edit) or selectable (UX-001)?",
+      "sourceRefs": [{ "sourceId": "item-desc", "locator": "CF-ACTIVITY-TYPE-LOCK" }]
+    },
+    {
+      "id": "OQ-ROUTE",
+      "blocking": false,
+      "question": "What route/menu path? Mockup breadcrumb is Activity Setup > Activity List > Dealer Activity Maintenance. developer-decision-001 says ignore existing /activity-setup page code.",
+      "sourceRefs": [
+        { "sourceId": "ux-init", "locator": "breadcrumb" },
+        { "sourceId": "developer-decision-001", "locator": "new screen" }
+      ]
+    },
+    {
+      "id": "OQ-FOLLOW-UP-STAFF",
+      "blocking": false,
+      "question": "Edit Operation mentions Follow-up Staff; Item_Desc has no such field. Is that Assign Group only?",
+      "sourceRefs": [{ "sourceId": "dr-page", "locator": "Edit Operation" }]
+    }
+  ]
+}

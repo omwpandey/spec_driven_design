@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://top.example/schemas/api-contract.schema.json",
+  "title": "TOP API Contract",
+  "type": "object",
+  "required": ["schemaVersion", "feature", "sources", "entities", "actions", "errors", "acceptanceCriteria", "openQuestions"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "feature": {
+      "type": "object",
+      "required": ["id", "functionId", "title"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "functionId": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "sources": { "type": "array", "items": { "type": "object" } },
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "fields"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "table": { "type": "string" },
+          "primaryKey": { "type": "string" },
+          "fields": { "type": "array", "items": { "type": "object" } },
+          "relationships": { "type": "array", "items": { "type": "object" } },
+          "sourceRefs": { "type": "array", "items": { "type": "object" } }
+        },
+        "additionalProperties": false
+      }
+    },
+    "actions": { "type": "array", "items": { "type": "object" } },
+    "permissions": { "type": "array", "items": { "type": "object" } },
+    "errors": { "type": "array", "items": { "type": "object" } },
+    "acceptanceCriteria": { "type": "array", "items": { "type": "object" } },
+    "conflicts": { "type": "array", "items": { "type": "object" } },
+    "openQuestions": { "type": "array", "items": { "type": "object" } }
+  },
+  "additionalProperties": false
+}

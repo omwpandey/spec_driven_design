@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "UI Component Map",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "featureId",
+    "mappings"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "featureId": {
+      "type": "string"
+    },
+    "mappings": {
+      "type": "array"
+    }
+  }
+}

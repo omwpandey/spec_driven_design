@@ -1,0 +1,14 @@
+{
+  "name": "top-ui-spec-workflow",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "feature:validate": "node scripts/validate-feature-contract.mjs",
+    "component-map:validate": "node scripts/validate-component-map.mjs",
+    "screen:generate": "node scripts/generate-screen.mjs",
+    "ui:catalog": "node scripts/generate-component-catalog.mjs",
+    "ui:guard": "node scripts/ui-guard.mjs",
+    "ui:harness": "node scripts/ui-harness-check.mjs"
+  }
+}

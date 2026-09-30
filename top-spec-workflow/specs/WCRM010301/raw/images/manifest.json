@@ -1,0 +1,39 @@
+{
+  "page_id": "1646690475",
+  "images": [
+    "Periodic Maintenance - TMT-20260831-144226.png"
+  ],
+  "screens": [
+    {
+      "id": "UX-001",
+      "title": "Screen UX",
+      "image": "Periodic Maintenance - TMT-20260831-144226.png",
+      "source": "dr-page:UX Design"
+    }
+  ],
+  "skipped_not_ux_design": [
+    "image-20260702-055941 (2)-20260911-043910.png",
+    "image-20260910-070414-20260911-043132.png",
+    "image (3).png"
+  ],
+  "skipped_not_on_page": [
+    "image-20260910-070414-20260911-043132.png",
+    "image-20260702-055941 (2)-20260911-043910.png",
+    "Periodic Maintenance - TMT.png",
+    "image (3).png",
+    "image-20260721-111127.png",
+    "image-20260717-131700.png",
+    "image-20260716-102755.png",
+    "App.png",
+    "image-20260714-122334.png",
+    "image-20260714-103847.png",
+    "PM TMT.png",
+    "image-20260630-081735.png",
+    "Screenshot (409)-20260629-153009.png",
+    "image-20260629-143215.png",
+    "image-20260629-123801.png",
+    "image-20260629-123800.png",
+    "image-20260619-031409.png"
+  ],
+  "missing_from_attachments": []
+}

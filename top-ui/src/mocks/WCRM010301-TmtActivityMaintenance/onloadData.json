@@ -1,0 +1,80 @@
+{
+  "data": {
+    "activityId": "PM-TODO:23",
+    "dealerId": "TMT",
+    "branchId": "HO",
+    "activityTypeId": 1,
+    "activityTypeCode": "PM",
+    "activityTypeName": "Periodic Maintenance",
+    "version": 8,
+    "contactChannelDetails": [
+      {
+        "activityId": "PM-TODO:23",
+        "dealerId": "TMT",
+        "branchId": "HO",
+        "processType": "Service Follow-up",
+        "channelType": "SMS",
+        "activityDay": 20,
+        "groupId": 1,
+        "activityMasterId": "PM-TODO:23",
+        "version": 0,
+        "deleted": false,
+        "id": 0,
+        "rowStatus": null
+      },
+      {
+        "activityId": "PM-TODO:23",
+        "dealerId": "TMT",
+        "branchId": "HO",
+        "processType": "Service Follow-up",
+        "channelType": "SMS",
+        "activityDay": 25,
+        "groupId": 1,
+        "activityMasterId": "PM-TODO:23",
+        "version": 0,
+        "deleted": false,
+        "id": 0,
+        "rowStatus": null
+      },
+      {
+        "activityId": "PM-TODO:23",
+        "dealerId": "TMT",
+        "branchId": "HO",
+        "processType": "Service Follow-up",
+        "channelType": "Email",
+        "activityDay": 30,
+        "groupId": 1,
+        "activityMasterId": "PM-TODO:23",
+        "version": 0,
+        "deleted": false,
+        "id": 0,
+        "rowStatus": null
+      }
+    ],
+    "repairInspectionItems": [
+      {
+        "activityId": "PM-TODO:23",
+        "branchId": "HO",
+        "dealerId": "TMT",
+        "mandatoryFlg": "Y",
+        "repairInspectionCode": "10000",
+        "rowStatus": null,
+        "version": 1
+      },
+      {
+        "activityId": "PM-TODO:23",
+        "branchId": "HO",
+        "dealerId": "TMT",
+        "mandatoryFlg": "Y",
+        "repairInspectionCode": "20000",
+        "rowStatus": null,
+        "version": 1
+      }
+    ],
+    "rowStatus": null
+  },
+  "page": 0,
+  "size": 20,
+  "tableData": null,
+  "totalCount": -1
+}

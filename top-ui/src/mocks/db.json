@@ -1,0 +1,153 @@
+{
+  "activity-setup": {
+    "summary": {
+      "totalVehicles": 60000,
+      "totalIndividualCustomers": 55231,
+      "individualPercentage": "85%",
+      "totalCorporateCustomers": 5231,
+      "corporatePercentage": "15%"
+    },
+    "activityTypes": [
+      { "value": "periodic_maintenance", "label": "Periodic Maintenance" },
+      { "value": "additional_rejected", "label": "Additional Rejected Job" },
+      { "value": "dcm_vehicle", "label": "DCM Vehicle" },
+      { "value": "tcfr", "label": "TCFR+" },
+      { "value": "ssc_csc", "label": "SSC/CSC" },
+      { "value": "body_paint", "label": "Body & Paint" },
+      { "value": "bp_insurance", "label": "BP Insurance Renewal" },
+      { "value": "post_service", "label": "Post Service Follow Up (PSFU)" }
+    ],
+    "customerTypes": [
+      { "value": "individual", "label": "Individual" },
+      { "value": "corporate", "label": "Corporate" },
+      { "value": "all", "label": "All" }
+    ],
+    "formData": {
+      "activityType": "periodic_maintenance",
+      "activityId": "PM260001",
+      "activityName": "Periodic Maintenance 20,000",
+      "activityDescription": "20,000 km periodic maintenance service",
+      "customerType": "all",
+      "suppressDays": 90
+    },
+    "repairItems": [
+      { "id": 1, "repairCode": "1,000", "description": "1000 km Service/ 1 Month", "selected": true, "mandatory": "Yes" },
+      { "id": 2, "repairCode": "10,000", "description": "10,000 km Service/ 6 Month", "selected": true, "mandatory": "No" },
+      { "id": 3, "repairCode": "20,000", "description": "20,000 km Service/ 12 Month", "selected": true, "mandatory": "Yes" },
+      { "id": 4, "repairCode": "30,000", "description": "30,000 km Service/ 18 Month", "selected": true, "mandatory": "Yes" },
+      { "id": 5, "repairCode": "40,000", "description": "40,000 km Service/ 24 Month", "selected": true, "mandatory": "Yes" }
+    ],
+    "contactChannels": [
+      { "id": 1, "status": "ADD", "contactProcess": "service_followup", "channel": "call_out", "activityDay": -30 },
+      { "id": 2, "status": "UPD", "contactProcess": "service_followup", "channel": "email", "activityDay": -25 },
+      { "id": 3, "status": "UPD", "contactProcess": "service_followup", "channel": "sms", "activityDay": 30 },
+      { "id": 4, "status": "UPD", "contactProcess": "appointment_confirmation", "channel": "line_oa", "activityDay": -1 }
+    ],
+    "mileageRanges": [
+      { "value": "1k-200k", "label": "Select 1K-200K" },
+      { "value": "210k-250k", "label": "Select 210K-250K" },
+      { "value": "260k-300k", "label": "Select 260K-300K" },
+      { "value": "310k-350k", "label": "Select 310K-350K" },
+      { "value": "360k-400k", "label": "Select 360K-400K" }
+    ],
+    "contactProcessOptions": [
+      { "value": "service_followup", "label": "Service Follow-up" },
+      { "value": "appointment_confirmation", "label": "Appointment Confirmation" },
+      { "value": "reminder", "label": "Reminder" }
+    ],
+    "channelOptions": [
+      { "value": "call_out", "label": "Call Out" },
+      { "value": "email", "label": "Email" },
+      { "value": "sms", "label": "SMS" },
+      { "value": "line_oa", "label": "Line OA" }
+    ]
+  },
+  "psfu-activity": {
+    "activityTypes": [
+      { "value": "periodic_maintenance", "label": "Periodic Maintenance" },
+      { "value": "additional_rejected", "label": "Additional Rejected Job" },
+      { "value": "dcm_vehicle", "label": "DCM Vehicle" },
+      { "value": "tcfr", "label": "TCFR+" },
+      { "value": "ssc_csc", "label": "SSC/CSC" },
+      { "value": "body_paint", "label": "Body & Paint" },
+      { "value": "bp_insurance", "label": "BP Insurance Renewal" },
+      { "value": "post_service", "label": "Post Service Follow Up (PSFU)" }
+    ],
+    "itemOptions": [
+      { "value": "psfu_1", "label": "PSFU Item 1" },
+      { "value": "psfu_2", "label": "PSFU Item 2" },
+      { "value": "psfu_3", "label": "PSFU Item 3" },
+      { "value": "psfu_4", "label": "PSFU Item 4" },
+      { "value": "psfu_5", "label": "PSFU Item 5" }
+    ],
+    "items": [
+      { "id": 1, "status": "UPD", "item": "psfu_1", "mandatory": false }
+    ]
+  },
+  "activities": [
+    {
+      "id": "PM260001",
+      "activityType": "periodic_maintenance",
+      "activityName": "Periodic Maintenance 20,000",
+      "activityDescription": "20,000 km periodic maintenance service",
+      "customerType": "all",
+      "heijunkaDays": 10,
+      "suppressDays": 90,
+      "status": "active"
+    },
+    {
+      "id": "PM260002",
+      "activityType": "periodic_maintenance",
+      "activityName": "Periodic Maintenance 40,000",
+      "activityDescription": "40,000 km periodic maintenance service",
+      "customerType": "individual",
+      "heijunkaDays": 15,
+      "suppressDays": 120,
+      "status": "active"
+    }
+  ],
+  "customers": [
+    {
+      "id": 1,
+      "customerName": "Somchai Michai",
+      "mobile": "0891234567",
+      "email": "somchai@example.com",
+      "type": "individual",
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "customerName": "Bangkok Motors Co., Ltd.",
+      "mobile": "0221234567",
+      "email": "info@bangkokmotors.com",
+      "type": "corporate",
+      "status": "active"
+    }
+  ],
+  "repair-codes": [
+    { "id": 1, "code": "1000", "description": "1000 km Service/ 1 Month" },
+    { "id": 2, "code": "10000", "description": "10,000 km Service/ 6 Month" },
+    { "id": 3, "code": "20000", "description": "20,000 km Service/ 12 Month" },
+    { "id": 4, "code": "30000", "description": "30,000 km Service/ 18 Month" },
+    { "id": 5, "code": "40000", "description": "40,000 km Service/ 24 Month" }
+  ],
+  "channels": [
+    { "id": 1, "name": "Call Out", "code": "call_out" },
+    { "id": 2, "name": "Email", "code": "email" },
+    { "id": 3, "name": "SMS", "code": "sms" },
+    { "id": 4, "name": "Line OA", "code": "line_oa" }
+  ],
+  "auth": {
+    "user": {
+      "id": "USR001",
+      "name": "Somchai Michai",
+      "email": "somchai@toyota.com",
+      "role": "Admin",
+      "permissions": ["ACTIVITY_VIEW", "ACTIVITY_ADD", "ACTIVITY_EDIT", "ACTIVITY_DELETE"],
+      "dealerCode": "TBC",
+      "dealerName": "T.BANGKOK CENTRAL",
+      "branchCode": "BKK-001",
+      "branchName": "Bangna"
+    }
+  }
+}

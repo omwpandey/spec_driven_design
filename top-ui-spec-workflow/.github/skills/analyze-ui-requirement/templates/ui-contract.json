@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0",
+  "feature": {
+    "id": "<STORY-ID>",
+    "title": "<Feature Title>",
+    "summary": ""
+  },
+  "sources": [],
+  "screen": {
+    "name": "",
+    "route": null,
+    "modes": []
+  },
+  "fields": [],
+  "actions": [],
+  "states": [],
+  "permissions": [],
+  "acceptanceCriteria": [],
+  "conflicts": [],
+  "openQuestions": []
+}

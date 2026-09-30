@@ -1,0 +1,294 @@
+{
+  "schemaVersion": "1.0",
+  "featureId": "WCRM010301",
+  "mappings": [
+    {
+      "requirementId": "field.activityType",
+      "capability": "radio group (9 Activity Type options, Periodic Maintenance in scope)",
+      "decision": "reuse",
+      "components": [
+        { "name": "FormRadioGroup", "path": "src/components/form/FormRadioGroup.tsx" }
+      ],
+      "rationale": "CMP-WCRM010301-001..009. Catalog RHF radio group; its own `dense` prop doc comment explicitly names 'Activity Type' as the intended compact-layout use case. Disabled in Update mode per EVT_WCRM010301_10.",
+      "evidenceUsages": ["src/components/form/FormRadioGroup.tsx"]
+    },
+    {
+      "requirementId": "section.activityType",
+      "capability": "Activity Type section chrome",
+      "decision": "compose",
+      "components": [
+        { "name": "SectionCard", "path": "src/components/layout/SectionCard.tsx" },
+        { "name": "FormRadioGroup", "path": "src/components/form/FormRadioGroup.tsx" }
+      ],
+      "rationale": "SEC-ACTIVITY-TYPE wraps the radio group; matches the bordered panel visible in the mockup.",
+      "evidenceUsages": ["src/components/layout/SectionCard.tsx"]
+    },
+    {
+      "requirementId": "field.inspection.status",
+      "capability": "read-only grid status column (ADD/UPD/DEL)",
+      "decision": "configure",
+      "components": [
+        { "name": "TopTable", "path": "src/components/table/topTable/topTable.tsx" }
+      ],
+      "rationale": "CMP-WCRM010301-010 in the Service & Repair Inspection Item grid. Column fieldtype 'label' with a custom colored render, matching the real 'status' column pattern in ContactChannelSection.tsx (no separate StatusIndicator is used for ADD/UPD/DEL row-action status in this codebase).",
+      "evidenceUsages": ["src/modules/activity-setup/ActivitySetup/components/ContactChannelSection.tsx"]
+    },
+    {
+      "requirementId": "field.inspection.no",
+      "capability": "auto-numbered read-only grid column",
+      "decision": "configure",
+      "components": [
+        { "name": "TopTable", "path": "src/components/table/topTable/topTable.tsx" }
+      ],
+      "rationale": "CMP-WCRM010301-011. Column fieldtype 'label' rendering index+1, matching the 'no' column in ServiceRepairSection.tsx.",
+      "evidenceUsages": ["src/modules/activity-setup/ActivitySetup/components/ServiceRepairSection.tsx"]
+    },
+    {
+      "requirementId": "field.inspection.repairCode",
+      "capability": "dropdown grid column, disabled for existing rows",
+      "decision": "configure",
+      "components": [
+        { "name": "TopTable", "path": "src/components/table/topTable/topTable.tsx" }
+      ],
+      "rationale": "CMP-WCRM010301-012. Column fieldtype/editTemplate 'dropdown' with preloadData from PM Operation Master; column-level `disabled` for existing rows per dr-page On-Load Operation.",
+      "evidenceUsages": ["src/components/table/topTable/topTable.tsx"]
+    },
+    {
+      "requirementId": "field.inspection.description",
+      "capability": "auto-populated read-only grid column",
+      "decision": "configure",
+      "components": [
+        { "name": "TopTable", "path": "src/components/table/topTable/topTable.tsx" }
+      ],
+      "rationale": "CMP-WCRM010301-013. Column fieldtype 'label', matching the 'description' column pattern in ServiceRepairSection.tsx; value set programmatically on repair-code selection (EVT_WCRM010301_05).",
+      "evidenceUsages": ["src/modules/activity-setup/ActivitySetup/components/ServiceRepairSection.tsx"]
+    },
+    {
+      "requirementId": "field.inspection.mandatory",
+      "capability": "checkbox grid column",
+      "decision": "configure",
+      "components": [
+        { "name": "TopTable", "path": "src/components/table/topTable/topTable.tsx" }
+      ],
+      "rationale": "CMP-WCRM010301-014. Column fieldtype 'checkbox'; on change for an existing row the row Status is set to UPD (EVT_WCRM010301_06).",
+      "evidenceUsages": ["src/components/table/topTable/topTable.tsx"]
+    },
+    {
+      "requirementId": "field.inspection.deleteRow",
+      "capability": "icon delete action in grid",
+      "decision": "reuse",
+      "components": [
+        { "name": "ActionIconButton", "path": "src/components/common/ActionButtons.tsx" }
+      ],
+      "rationale": "CMP-WCRM010301-015. Catalog icon action (icon=\"delete\") used inside the TopTable action column's renderActions instead of a raw MUI IconButton.",
+      "evidenceUsages": ["src/components/common/ActionButtons.tsx"]
+    },
+    {
+      "requirementId": "field.inspection.addRow",
+      "capability": "add grid row action",
+      "decision": "reuse",
+      "components": [
+        { "name": "AddButton", "path": "src/components/common/ActionButtons.tsx" }
+      ],
+      "rationale": "CMP-WCRM010301-016. Catalog add action rendered via TopTable's `headerActions` slot.",
+      "evidenceUsages": ["src/components/common/ActionButtons.tsx"]
+    },
+    {
+      "requirementId": "section.inspectionGrid",
+      "capability": "Service & Repair Inspection Item grid section",
+      "decision": "compose",
+      "components": [
+        { "name": "SectionCard", "path": "src/components/layout/SectionCard.tsx" },
+        { "name": "TopTable", "path": "src/components/table/topTable/topTable.tsx" },
+        { "name": "AddButton", "path": "src/components/common/ActionButtons.tsx" },
+        { "name": "ActionIconButton", "path": "src/components/common/ActionButtons.tsx" }
+      ],
+      "rationale": "SEC-INSPECTION. Same composition pattern as ServiceRepairSection.tsx: SectionCard wraps a TopTable configured for inline add/edit/delete rows.",
+      "evidenceUsages": ["src/modules/activity-setup/ActivitySetup/components/ServiceRepairSection.tsx"]
+    },
+    {
+      "requirementId": "field.contact.contactProcess",
+      "capability": "dropdown grid column (Service Follow-up only)",
+      "decision": "configure",
+      "components": [
+        { "name": "TopTable", "path": "src/components/table/topTable/topTable.tsx" }
+      ],
+      "rationale": "CMP-WCRM010301-017. Column fieldtype/editTemplate 'dropdown', preloadData restricted to Service Follow-up per developer-decision-003 (overrides item-desc's Appointment Confirmation option).",
+      "evidenceUsages": ["src/modules/activity-setup/ActivitySetup/components/ContactChannelSection.tsx"]
+    },
+    {
+      "requirementId": "field.contact.channel",
+      "capability": "dropdown grid column (Call, Email, SMS)",
+      "decision": "configure",
+      "components": [
+        { "name": "TopTable", "path": "src/components/table/topTable/topTable.tsx" }
+      ],
+      "rationale": "CMP-WCRM010301-018. Column fieldtype/editTemplate 'dropdown', preloadData = Call, Email, SMS per developer-decision-002 (overrides item-desc's Email/TMT LON note and the mockup's Email/SMS sample rows).",
+      "evidenceUsages": ["src/modules/activity-setup/ActivitySetup/components/ContactChannelSection.tsx"]
+    },
+    {
+      "requirementId": "field.contact.activityDay",
+      "capability": "number grid column with range validation",
+      "decision": "configure",
+      "components": [
+        { "name": "TopTable", "path": "src/components/table/topTable/topTable.tsx" }
+      ],
+      "rationale": "CMP-WCRM010301-019. Column fieldtype/editTemplate 'number' with validators enforcing numeric-only, max 2 digits, -30 to 30 (developer-decision-004). ContactChannelSection.tsx shows the same field with a different (per-process) range as implementation precedent only \u2014 not carried over as a business rule.",
+      "evidenceUsages": ["src/modules/activity-setup/ActivitySetup/components/ContactChannelSection.tsx"]
+    },
+    {
+      "requirementId": "field.contact.addRow",
+      "capability": "add grid row action",
+      "decision": "reuse",
+      "components": [
+        { "name": "AddButton", "path": "src/components/common/ActionButtons.tsx" }
+      ],
+      "rationale": "CMP-WCRM010301-020. Same AddButton pattern as field.inspection.addRow, evidenced by ContactChannelSection.tsx's own \"+ Add\" header action.",
+      "evidenceUsages": ["src/modules/activity-setup/ActivitySetup/components/ContactChannelSection.tsx"]
+    },
+    {
+      "requirementId": "field.contact.deleteRow",
+      "capability": "icon delete action in grid",
+      "decision": "reuse",
+      "components": [
+        { "name": "ActionIconButton", "path": "src/components/common/ActionButtons.tsx" }
+      ],
+      "rationale": "CMP-WCRM010301-021. Same ActionIconButton pattern as field.inspection.deleteRow.",
+      "evidenceUsages": ["src/components/common/ActionButtons.tsx"]
+    },
+    {
+      "requirementId": "section.contactGrid",
+      "capability": "Contact Channel Details grid section",
+      "decision": "compose",
+      "components": [
+        { "name": "SectionCard", "path": "src/components/layout/SectionCard.tsx" },
+        { "name": "TopTable", "path": "src/components/table/topTable/topTable.tsx" },
+        { "name": "AddButton", "path": "src/components/common/ActionButtons.tsx" },
+        { "name": "ActionIconButton", "path": "src/components/common/ActionButtons.tsx" }
+      ],
+      "rationale": "SEC-CONTACT. Same composition pattern as the real ContactChannelSection.tsx (SectionCard + TopTable inline add/edit/delete), scoped down to this feature's own Contact Process/Channel/Activity Day rules.",
+      "evidenceUsages": ["src/modules/activity-setup/ActivitySetup/components/ContactChannelSection.tsx"]
+    },
+    {
+      "requirementId": "field.save",
+      "capability": "primary footer save action",
+      "decision": "reuse",
+      "components": [
+        { "name": "SaveButton", "path": "src/components/common/ActionButtons.tsx" }
+      ],
+      "rationale": "CMP-WCRM010301-022, rendered in PageFooter actions.",
+      "evidenceUsages": ["src/components/common/ActionButtons.tsx", "src/components/layout/PageFooter.tsx"]
+    },
+    {
+      "requirementId": "action.evt01.loadScreen",
+      "capability": "page load chrome with default PM configuration",
+      "decision": "compose",
+      "components": [
+        { "name": "PageContainer", "path": "src/components/layout/PageContainer.tsx" },
+        { "name": "PageHeader", "path": "src/components/layout/PageHeader.tsx" },
+        { "name": "SectionCard", "path": "src/components/layout/SectionCard.tsx" },
+        { "name": "LoadingOverlay", "path": "src/components/common/LoadingOverlay.tsx" },
+        { "name": "ErrorState", "path": "src/components/common/ErrorState.tsx" }
+      ],
+      "rationale": "EVT_WCRM010301_01. Standard screen chrome plus loading/error state while API-WCRM010301-002 (load) runs.",
+      "evidenceUsages": ["src/modules/activity-setup/ActivitySetup/ActivitySetupPage.tsx"]
+    },
+    {
+      "requirementId": "action.evt02.selectPeriodicMaintenance",
+      "capability": "radio change with unsaved-changes confirm",
+      "decision": "compose",
+      "components": [
+        { "name": "FormRadioGroup", "path": "src/components/form/FormRadioGroup.tsx" },
+        { "name": "ConfirmDialog", "path": "src/components/common/ConfirmDialog.tsx" }
+      ],
+      "rationale": "EVT_WCRM010301_02. Radio change plus ConfirmDialog for the unsaved-changes warning noted on CMP-WCRM010301-001's behavior.",
+      "evidenceUsages": ["src/components/common/ConfirmDialog.tsx"]
+    },
+    {
+      "requirementId": "action.evt03.addInspectionRow",
+      "capability": "add inspection grid row",
+      "decision": "reuse",
+      "components": [
+        { "name": "AddButton", "path": "src/components/common/ActionButtons.tsx" }
+      ],
+      "rationale": "EVT_WCRM010301_03. Same AddButton as field.inspection.addRow.",
+      "evidenceUsages": ["src/components/common/ActionButtons.tsx"]
+    },
+    {
+      "requirementId": "action.evt04.deleteInspectionRow",
+      "capability": "mark inspection row deleted with success/failure feedback",
+      "decision": "compose",
+      "components": [
+        { "name": "ActionIconButton", "path": "src/components/common/ActionButtons.tsx" },
+        { "name": "ToastNotification", "path": "src/components/common/ToastNotification.tsx" }
+      ],
+      "rationale": "EVT_WCRM010301_04. Icon delete plus toast for the documented success/failure messages.",
+      "evidenceUsages": ["src/components/common/ToastNotification.tsx"]
+    },
+    {
+      "requirementId": "action.evt05.selectRepairCode",
+      "capability": "dropdown change auto-populates description",
+      "decision": "reuse",
+      "components": [
+        { "name": "TopTable", "path": "src/components/table/topTable/topTable.tsx" }
+      ],
+      "rationale": "EVT_WCRM010301_05. Same TopTable dropdown column as field.inspection.repairCode; on change the Description column value is set programmatically.",
+      "evidenceUsages": ["src/components/table/topTable/topTable.tsx"]
+    },
+    {
+      "requirementId": "action.evt06.updateMandatory",
+      "capability": "checkbox change sets row Status to UPD",
+      "decision": "reuse",
+      "components": [
+        { "name": "TopTable", "path": "src/components/table/topTable/topTable.tsx" }
+      ],
+      "rationale": "EVT_WCRM010301_06. Same TopTable checkbox column as field.inspection.mandatory.",
+      "evidenceUsages": ["src/components/table/topTable/topTable.tsx"]
+    },
+    {
+      "requirementId": "action.evt07.addContactRow",
+      "capability": "add contact grid row",
+      "decision": "reuse",
+      "components": [
+        { "name": "AddButton", "path": "src/components/common/ActionButtons.tsx" }
+      ],
+      "rationale": "EVT_WCRM010301_07. Same AddButton as field.contact.addRow.",
+      "evidenceUsages": ["src/components/common/ActionButtons.tsx"]
+    },
+    {
+      "requirementId": "action.evt08.enterActivityDay",
+      "capability": "numeric input with inline range validation",
+      "decision": "reuse",
+      "components": [
+        { "name": "TopTable", "path": "src/components/table/topTable/topTable.tsx" }
+      ],
+      "rationale": "EVT_WCRM010301_08. Same TopTable number column as field.contact.activityDay; invalid entries show the catalog inline field error.",
+      "evidenceUsages": ["src/components/table/topTable/topTable.tsx"]
+    },
+    {
+      "requirementId": "action.evt09.saveActivity",
+      "capability": "confirm then save the full activity setup",
+      "decision": "compose",
+      "components": [
+        { "name": "SaveButton", "path": "src/components/common/ActionButtons.tsx" },
+        { "name": "PageFooter", "path": "src/components/layout/PageFooter.tsx" },
+        { "name": "ConfirmDialog", "path": "src/components/common/ConfirmDialog.tsx" },
+        { "name": "ToastNotification", "path": "src/components/common/ToastNotification.tsx" }
+      ],
+      "rationale": "EVT_WCRM010301_09. Footer SaveButton triggers full-form validation, ConfirmDialog for the save confirmation prompt, then a toast for the HTTP 201 success message or failure message. Field-level errors stay on the TopTable/Form* wrappers.",
+      "evidenceUsages": ["src/modules/activity-setup/ActivitySetup/ActivitySetupPage.tsx", "src/components/layout/PageFooter.tsx"]
+    },
+    {
+      "requirementId": "action.evt10.updateAction",
+      "capability": "lock Activity Type on edit, confirm then save changes",
+      "decision": "compose",
+      "components": [
+        { "name": "FormRadioGroup", "path": "src/components/form/FormRadioGroup.tsx" },
+        { "name": "ConfirmDialog", "path": "src/components/common/ConfirmDialog.tsx" },
+        { "name": "ToastNotification", "path": "src/components/common/ToastNotification.tsx" }
+      ],
+      "rationale": "EVT_WCRM010301_10. FormRadioGroup rendered disabled when opening an existing activity; ConfirmDialog for the update confirmation prompt; toast for the update success/failure message.",
+      "evidenceUsages": ["src/components/form/FormRadioGroup.tsx", "src/components/common/ConfirmDialog.tsx"]
+    }
+  ]
+}

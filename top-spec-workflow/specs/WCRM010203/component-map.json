@@ -1,0 +1,471 @@
+{
+  "schemaVersion": "1.0",
+  "featureId": "WCRM010203",
+  "mappings": [
+    {
+      "requirementId": "field.back",
+      "capability": "header back action",
+      "decision": "compose",
+      "components": [
+        { "name": "PageHeader", "path": "src/components/layout/PageHeader.tsx" },
+        { "name": "BackButton", "path": "src/components/common/ActionButtons.tsx" }
+      ],
+      "rationale": "PageHeader hosts optional back; BackButton is the catalog action if header back is not enough.",
+      "evidenceUsages": ["src/components/layout/PageHeader.tsx"]
+    },
+    {
+      "requirementId": "field.activityType",
+      "capability": "radio group",
+      "decision": "reuse",
+      "components": [
+        { "name": "FormRadioGroup", "path": "src/components/form/FormRadioGroup.tsx" }
+      ],
+      "rationale": "Catalog RHF radio. Whether other types are disabled on Init Mode is a blocking open question.",
+      "evidenceUsages": ["src/components/form/FormRadioGroup.tsx"]
+    },
+    {
+      "requirementId": "field.summary.totalVehicles",
+      "capability": "summary metric card",
+      "decision": "reuse",
+      "components": [
+        { "name": "SummaryCard", "path": "src/components/common/SummaryCard.tsx" }
+      ],
+      "rationale": "Catalog KPI card for the vehicle total.",
+      "evidenceUsages": ["src/components/common/SummaryCard.tsx"]
+    },
+    {
+      "requirementId": "field.summary.individualCustomers",
+      "capability": "summary metric card",
+      "decision": "reuse",
+      "components": [
+        { "name": "SummaryCard", "path": "src/components/common/SummaryCard.tsx" }
+      ],
+      "rationale": "Same SummaryCard; subtitle can show the percentage from the contract.",
+      "evidenceUsages": ["src/components/common/SummaryCard.tsx"]
+    },
+    {
+      "requirementId": "field.summary.corporateCustomers",
+      "capability": "summary metric card",
+      "decision": "reuse",
+      "components": [
+        { "name": "SummaryCard", "path": "src/components/common/SummaryCard.tsx" }
+      ],
+      "rationale": "Same SummaryCard for corporate count and percentage.",
+      "evidenceUsages": ["src/components/common/SummaryCard.tsx"]
+    },
+    {
+      "requirementId": "field.activityId",
+      "capability": "read-only text",
+      "decision": "configure",
+      "components": [
+        { "name": "FormTextField", "path": "src/components/form/FormTextField.tsx" }
+      ],
+      "rationale": "Catalog text field disabled/readOnly for Activity ID.",
+      "evidenceUsages": ["src/components/form/FormTextField.tsx"]
+    },
+    {
+      "requirementId": "field.activityName",
+      "capability": "text input",
+      "decision": "configure",
+      "components": [
+        { "name": "FormTextField", "path": "src/components/form/FormTextField.tsx" }
+      ],
+      "rationale": "Catalog text field. Disabled vs editable on Init Mode is blocked by OQ-ACTIVITY-NAME-ADD.",
+      "evidenceUsages": ["src/components/form/FormTextField.tsx"]
+    },
+    {
+      "requirementId": "field.activityDescription",
+      "capability": "text input",
+      "decision": "reuse",
+      "components": [
+        { "name": "FormTextField", "path": "src/components/form/FormTextField.tsx" }
+      ],
+      "rationale": "Item_Desc type is Textbox. FormTextArea exists if multiline is required later.",
+      "evidenceUsages": ["src/components/form/FormTextField.tsx"]
+    },
+    {
+      "requirementId": "field.customerType",
+      "capability": "select",
+      "decision": "reuse",
+      "components": [
+        { "name": "FormSelect", "path": "src/components/form/FormSelect.tsx" }
+      ],
+      "rationale": "Catalog select for CMB-001.",
+      "evidenceUsages": ["src/components/form/FormSelect.tsx"]
+    },
+    {
+      "requirementId": "field.suppressDays",
+      "capability": "number input",
+      "decision": "reuse",
+      "components": [
+        { "name": "FormNumberField", "path": "src/components/form/FormNumberField.tsx" }
+      ],
+      "rationale": "Catalog number field for 0–90 Suppress Days.",
+      "evidenceUsages": ["src/components/form/FormNumberField.tsx"]
+    },
+    {
+      "requirementId": "field.dcmItem.select",
+      "capability": "table row checkbox",
+      "decision": "compose",
+      "components": [
+        { "name": "DataTable", "path": "src/components/table/DataTable.tsx" },
+        { "name": "FormCheckbox", "path": "src/components/form/FormCheckbox.tsx" },
+        { "name": "SectionCard", "path": "src/components/layout/SectionCard.tsx" }
+      ],
+      "rationale": "DataTable selection plus SectionCard for DCM Vehicle Item.",
+      "evidenceUsages": ["src/components/table/DataTable.tsx"]
+    },
+    {
+      "requirementId": "field.dcmItem.no",
+      "capability": "read-only table column",
+      "decision": "reuse",
+      "components": [
+        { "name": "DataTable", "path": "src/components/table/DataTable.tsx" }
+      ],
+      "rationale": "Sequence column on DataTable.",
+      "evidenceUsages": ["src/components/table/DataTable.tsx"]
+    },
+    {
+      "requirementId": "field.dcmItem.status",
+      "capability": "read-only table column",
+      "decision": "compose",
+      "components": [
+        { "name": "DataTable", "path": "src/components/table/DataTable.tsx" },
+        { "name": "StatusIndicator", "path": "src/components/common/StatusIndicator.tsx" }
+      ],
+      "rationale": "STATUS column; StatusIndicator for ADD/UPD/DEL.",
+      "evidenceUsages": ["src/components/common/StatusIndicator.tsx"]
+    },
+    {
+      "requirementId": "field.dcmItem.items",
+      "capability": "read-only table column",
+      "decision": "reuse",
+      "components": [
+        { "name": "DataTable", "path": "src/components/table/DataTable.tsx" }
+      ],
+      "rationale": "Items column on DataTable.",
+      "evidenceUsages": ["src/components/table/DataTable.tsx"]
+    },
+    {
+      "requirementId": "field.dcmItem.mileage",
+      "capability": "read-only table column",
+      "decision": "reuse",
+      "components": [
+        { "name": "DataTable", "path": "src/components/table/DataTable.tsx" }
+      ],
+      "rationale": "Mileage column on DataTable.",
+      "evidenceUsages": ["src/components/table/DataTable.tsx"]
+    },
+    {
+      "requirementId": "field.dcmItem.duration",
+      "capability": "read-only table column",
+      "decision": "reuse",
+      "components": [
+        { "name": "DataTable", "path": "src/components/table/DataTable.tsx" }
+      ],
+      "rationale": "Duration/Period column on DataTable.",
+      "evidenceUsages": ["src/components/table/DataTable.tsx"]
+    },
+    {
+      "requirementId": "field.dcmItem.mandatory",
+      "capability": "read-only table column",
+      "decision": "reuse",
+      "components": [
+        { "name": "DataTable", "path": "src/components/table/DataTable.tsx" }
+      ],
+      "rationale": "Mandatory column on DataTable.",
+      "evidenceUsages": ["src/components/table/DataTable.tsx"]
+    },
+    {
+      "requirementId": "field.channel.add",
+      "capability": "add row action",
+      "decision": "reuse",
+      "components": [
+        { "name": "AddButton", "path": "src/components/common/ActionButtons.tsx" }
+      ],
+      "rationale": "Catalog add action for Contact Channel Details.",
+      "evidenceUsages": ["src/components/common/ActionButtons.tsx"]
+    },
+    {
+      "requirementId": "field.channel.no",
+      "capability": "read-only table column",
+      "decision": "reuse",
+      "components": [
+        { "name": "DataTable", "path": "src/components/table/DataTable.tsx" }
+      ],
+      "rationale": "Channel sequence column on DataTable.",
+      "evidenceUsages": ["src/components/table/DataTable.tsx"]
+    },
+    {
+      "requirementId": "field.channel.status",
+      "capability": "read-only table column",
+      "decision": "compose",
+      "components": [
+        { "name": "DataTable", "path": "src/components/table/DataTable.tsx" },
+        { "name": "StatusIndicator", "path": "src/components/common/StatusIndicator.tsx" }
+      ],
+      "rationale": "ADD/UPD/DEL status with optional StatusIndicator.",
+      "evidenceUsages": ["src/components/common/StatusIndicator.tsx"]
+    },
+    {
+      "requirementId": "field.channel.contactProcess",
+      "capability": "select in grid",
+      "decision": "compose",
+      "components": [
+        { "name": "FormSelect", "path": "src/components/form/FormSelect.tsx" },
+        { "name": "DataTable", "path": "src/components/table/DataTable.tsx" }
+      ],
+      "rationale": "Catalog select in a DataTable cell for CMB-002.",
+      "evidenceUsages": ["src/components/form/FormSelect.tsx"]
+    },
+    {
+      "requirementId": "field.channel.channel",
+      "capability": "select in grid",
+      "decision": "compose",
+      "components": [
+        { "name": "FormSelect", "path": "src/components/form/FormSelect.tsx" },
+        { "name": "DataTable", "path": "src/components/table/DataTable.tsx" }
+      ],
+      "rationale": "Catalog select in a DataTable cell for CMB-003.",
+      "evidenceUsages": ["src/components/form/FormSelect.tsx"]
+    },
+    {
+      "requirementId": "field.channel.activityDay",
+      "capability": "number in grid",
+      "decision": "compose",
+      "components": [
+        { "name": "FormNumberField", "path": "src/components/form/FormNumberField.tsx" },
+        { "name": "DataTable", "path": "src/components/table/DataTable.tsx" }
+      ],
+      "rationale": "Catalog number field in a DataTable cell. Range not implemented until OQ-ACTIVITY-DAY-RANGE is resolved.",
+      "evidenceUsages": ["src/components/form/FormNumberField.tsx"]
+    },
+    {
+      "requirementId": "field.channel.assignGroup",
+      "capability": "select in grid",
+      "decision": "compose",
+      "components": [
+        { "name": "FormSelect", "path": "src/components/form/FormSelect.tsx" },
+        { "name": "DataTable", "path": "src/components/table/DataTable.tsx" }
+      ],
+      "rationale": "Catalog select for CMB-004. Required-when-Call-Out vs always-required is blocked.",
+      "evidenceUsages": ["src/components/form/FormSelect.tsx"]
+    },
+    {
+      "requirementId": "field.channel.deleteRow",
+      "capability": "icon delete in grid",
+      "decision": "reuse",
+      "components": [
+        { "name": "ActionIconButton", "path": "src/components/common/ActionButtons.tsx" }
+      ],
+      "rationale": "Catalog icon action instead of raw MUI IconButton.",
+      "evidenceUsages": ["src/components/common/ActionButtons.tsx"]
+    },
+    {
+      "requirementId": "field.deleteActivity",
+      "capability": "destructive footer action",
+      "decision": "reuse",
+      "components": [
+        { "name": "DeleteButton", "path": "src/components/common/ActionButtons.tsx" }
+      ],
+      "rationale": "Catalog destructive footer button.",
+      "evidenceUsages": ["src/components/common/ActionButtons.tsx"]
+    },
+    {
+      "requirementId": "field.setTemplate",
+      "capability": "secondary footer action",
+      "decision": "reuse",
+      "components": [
+        { "name": "SecondaryButton", "path": "src/components/common/ActionButtons.tsx" }
+      ],
+      "rationale": "Catalog outlined action. Dialog is mapped on action.evt013.",
+      "evidenceUsages": ["src/components/common/ActionButtons.tsx"]
+    },
+    {
+      "requirementId": "field.save",
+      "capability": "primary save action",
+      "decision": "reuse",
+      "components": [
+        { "name": "SaveButton", "path": "src/components/common/ActionButtons.tsx" }
+      ],
+      "rationale": "Catalog save action.",
+      "evidenceUsages": ["src/components/common/ActionButtons.tsx"]
+    },
+    {
+      "requirementId": "action.evt001.load",
+      "capability": "page load chrome",
+      "decision": "compose",
+      "components": [
+        { "name": "PageContainer", "path": "src/components/layout/PageContainer.tsx" },
+        { "name": "PageHeader", "path": "src/components/layout/PageHeader.tsx" },
+        { "name": "SectionCard", "path": "src/components/layout/SectionCard.tsx" },
+        { "name": "LoadingOverlay", "path": "src/components/common/LoadingOverlay.tsx" }
+      ],
+      "rationale": "Standard screen chrome plus overlay while API_001/API_002 run.",
+      "evidenceUsages": ["src/components/layout/PageContainer.tsx"]
+    },
+    {
+      "requirementId": "action.evt002.changeActivityType",
+      "capability": "radio change plus unsaved confirm",
+      "decision": "compose",
+      "components": [
+        { "name": "FormRadioGroup", "path": "src/components/form/FormRadioGroup.tsx" },
+        { "name": "ConfirmDialog", "path": "src/components/common/ConfirmDialog.tsx" }
+      ],
+      "rationale": "Radio plus ConfirmDialog for WRN0001.",
+      "evidenceUsages": ["src/components/common/ConfirmDialog.tsx"]
+    },
+    {
+      "requirementId": "action.evt003.changeDescription",
+      "capability": "text change",
+      "decision": "reuse",
+      "components": [
+        { "name": "FormTextField", "path": "src/components/form/FormTextField.tsx" }
+      ],
+      "rationale": "Same FormTextField as field.activityDescription.",
+      "evidenceUsages": ["src/components/form/FormTextField.tsx"]
+    },
+    {
+      "requirementId": "action.evt004.changeCustomerType",
+      "capability": "select change",
+      "decision": "reuse",
+      "components": [
+        { "name": "FormSelect", "path": "src/components/form/FormSelect.tsx" }
+      ],
+      "rationale": "Same FormSelect as field.customerType.",
+      "evidenceUsages": ["src/components/form/FormSelect.tsx"]
+    },
+    {
+      "requirementId": "action.evt005.toggleDcmItem",
+      "capability": "row selection change",
+      "decision": "compose",
+      "components": [
+        { "name": "DataTable", "path": "src/components/table/DataTable.tsx" },
+        { "name": "FormCheckbox", "path": "src/components/form/FormCheckbox.tsx" }
+      ],
+      "rationale": "Selection stays on the DCM item DataTable.",
+      "evidenceUsages": ["src/components/table/DataTable.tsx"]
+    },
+    {
+      "requirementId": "action.evt006.addContactChannel",
+      "capability": "add grid row",
+      "decision": "reuse",
+      "components": [
+        { "name": "AddButton", "path": "src/components/common/ActionButtons.tsx" }
+      ],
+      "rationale": "Same AddButton as field.channel.add.",
+      "evidenceUsages": ["src/components/common/ActionButtons.tsx"]
+    },
+    {
+      "requirementId": "action.evt007.changeContactProcess",
+      "capability": "select change in grid",
+      "decision": "reuse",
+      "components": [
+        { "name": "FormSelect", "path": "src/components/form/FormSelect.tsx" }
+      ],
+      "rationale": "Same FormSelect as field.channel.contactProcess.",
+      "evidenceUsages": ["src/components/form/FormSelect.tsx"]
+    },
+    {
+      "requirementId": "action.evt008.changeChannel",
+      "capability": "select change in grid",
+      "decision": "reuse",
+      "components": [
+        { "name": "FormSelect", "path": "src/components/form/FormSelect.tsx" }
+      ],
+      "rationale": "Same FormSelect as field.channel.channel.",
+      "evidenceUsages": ["src/components/form/FormSelect.tsx"]
+    },
+    {
+      "requirementId": "action.evt009.changeActivityDay",
+      "capability": "number change in grid",
+      "decision": "reuse",
+      "components": [
+        { "name": "FormNumberField", "path": "src/components/form/FormNumberField.tsx" }
+      ],
+      "rationale": "Same FormNumberField as field.channel.activityDay.",
+      "evidenceUsages": ["src/components/form/FormNumberField.tsx"]
+    },
+    {
+      "requirementId": "action.evt010.changeAssignGroup",
+      "capability": "select change in grid",
+      "decision": "reuse",
+      "components": [
+        { "name": "FormSelect", "path": "src/components/form/FormSelect.tsx" }
+      ],
+      "rationale": "Same FormSelect as field.channel.assignGroup.",
+      "evidenceUsages": ["src/components/form/FormSelect.tsx"]
+    },
+    {
+      "requirementId": "action.evt011.deleteContactChannel",
+      "capability": "confirm then mark row deleted",
+      "decision": "compose",
+      "components": [
+        { "name": "ActionIconButton", "path": "src/components/common/ActionButtons.tsx" },
+        { "name": "ConfirmDialog", "path": "src/components/common/ConfirmDialog.tsx" }
+      ],
+      "rationale": "Icon delete plus ConfirmDialog for WRN0002.",
+      "evidenceUsages": ["src/components/common/ConfirmDialog.tsx"]
+    },
+    {
+      "requirementId": "action.evt012.deleteActivity",
+      "capability": "confirm destructive delete",
+      "decision": "compose",
+      "components": [
+        { "name": "DeleteButton", "path": "src/components/common/ActionButtons.tsx" },
+        { "name": "ConfirmDialog", "path": "src/components/common/ConfirmDialog.tsx" },
+        { "name": "ToastNotification", "path": "src/components/common/ToastNotification.tsx" }
+      ],
+      "rationale": "DeleteButton, WRN0003 ConfirmDialog, toast on success.",
+      "evidenceUsages": ["src/components/common/ConfirmDialog.tsx"]
+    },
+    {
+      "requirementId": "action.evt013.setTemplate",
+      "capability": "template dialog",
+      "decision": "compose",
+      "components": [
+        { "name": "SetTemplateDialog", "path": "src/components/common/SetTemplateDialog.tsx" },
+        { "name": "MessagePreviewDialog", "path": "src/components/common/MessagePreviewDialog.tsx" },
+        { "name": "SecondaryButton", "path": "src/components/common/ActionButtons.tsx" }
+      ],
+      "rationale": "Catalog template editor matches the DR-page popup. Do not invent grid-populate until OQ-SET-TEMPLATE is resolved.",
+      "evidenceUsages": ["src/components/common/SetTemplateDialog.tsx"]
+    },
+    {
+      "requirementId": "action.evt014.save",
+      "capability": "confirm and save",
+      "decision": "compose",
+      "components": [
+        { "name": "SaveButton", "path": "src/components/common/ActionButtons.tsx" },
+        { "name": "PageFooter", "path": "src/components/layout/PageFooter.tsx" },
+        { "name": "ScreenActionBar", "path": "src/components/common/ActionButtons.tsx" },
+        { "name": "ConfirmDialog", "path": "src/components/common/ConfirmDialog.tsx" },
+        { "name": "ToastNotification", "path": "src/components/common/ToastNotification.tsx" }
+      ],
+      "rationale": "Footer SaveButton with confirm then toast. Field errors stay on Form* wrappers.",
+      "evidenceUsages": ["src/components/layout/PageFooter.tsx"]
+    },
+    {
+      "requirementId": "action.evt015.navigateAway",
+      "capability": "unsaved leave confirm",
+      "decision": "reuse",
+      "components": [
+        { "name": "ConfirmDialog", "path": "src/components/common/ConfirmDialog.tsx" }
+      ],
+      "rationale": "Catalog confirm for WRN0001.",
+      "evidenceUsages": ["src/components/common/ConfirmDialog.tsx"]
+    },
+    {
+      "requirementId": "action.back",
+      "capability": "leave to activity list",
+      "decision": "compose",
+      "components": [
+        { "name": "PageHeader", "path": "src/components/layout/PageHeader.tsx" },
+        { "name": "BackButton", "path": "src/components/common/ActionButtons.tsx" },
+        { "name": "ConfirmDialog", "path": "src/components/common/ConfirmDialog.tsx" }
+      ],
+      "rationale": "Header back plus the same unsaved ConfirmDialog as EVT-015.",
+      "evidenceUsages": ["src/components/layout/PageHeader.tsx"]
+    }
+  ]
+}

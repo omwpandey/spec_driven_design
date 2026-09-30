@@ -1,0 +1,44 @@
+{
+  "data": null,
+  "page": 0,
+  "size": 20,
+  "tableData": [
+    {
+      "comboType": "CONTACT_CHANNEL",
+      "code": "E",
+      "name": "Email",
+      "id": 2
+    },
+    {
+      "comboType": "CONTACT_CHANNEL",
+      "code": "CL",
+      "name": "Call Out",
+      "id": 3
+    },
+    {
+      "comboType": "CONTACT_CHANNEL",
+      "code": "TC",
+      "name": "T-Connect",
+      "id": 4
+    },
+    {
+      "comboType": "CONTACT_CHANNEL",
+      "code": "TL",
+      "name": "TMT Line",
+      "id": 5
+    },
+    {
+      "comboType": "CONTACT_CHANNEL",
+      "code": "LN",
+      "name": "Line OA",
+      "id": 6
+    },
+    {
+      "comboType": "CONTACT_CHANNEL",
+      "code": "S",
+      "name": "SMS",
+      "id": 7
+    }
+  ],
+  "totalCount": 6
+}
