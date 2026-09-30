@@ -7,6 +7,8 @@ context: fork
 
 # UI Review
 
+Owner: UI Reviewer. Use [docs/UI_AGENTIC_REVIEW_CHECKLIST.md](../../../docs/UI_AGENTIC_REVIEW_CHECKLIST.md) as the project standard and [docs/UI_REVIEW_CHECKLIST.md](../../../docs/UI_REVIEW_CHECKLIST.md) as the manual pass.
+
 Read/write spec review artifacts under `TOP_UI_SPEC_ROOT/<STORY-ID>/`, normally `../top-spec-workflow/specs/<STORY-ID>/`. Treat `specs/<STORY-ID>/...` below as shorthand for that shared specs root.
 
 Read only:

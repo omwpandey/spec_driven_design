@@ -36,6 +36,24 @@
       }
     },
     "actions": { "type": "array", "items": { "type": "object" } },
+    "apis": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "method", "path", "responseExample"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "name": { "type": "string" },
+          "method": { "type": "string", "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"] },
+          "path": { "type": "string", "minLength": 1 },
+          "requestExample": {},
+          "responseExample": {},
+          "errors": { "type": "array", "items": { "type": "object" } },
+          "sourceRefs": { "type": "array", "items": { "type": "object" } }
+        },
+        "additionalProperties": false
+      }
+    },
     "permissions": { "type": "array", "items": { "type": "object" } },
     "errors": { "type": "array", "items": { "type": "object" } },
     "acceptanceCriteria": { "type": "array", "items": { "type": "object" } },

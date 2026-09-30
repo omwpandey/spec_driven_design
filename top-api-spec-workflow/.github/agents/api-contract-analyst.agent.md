@@ -10,4 +10,4 @@ handoffs:
     send: false
 ---
 
-Read the shared artifacts from `top-spec-workflow`. Confirm the grill is agreed before editing `api-contract.json`. Use the API schema and preserve source traceability. Do not implement Java, invent database behavior, or modify the shared raw DR artifacts. Leave unresolved material behavior in `openQuestions`.
+Read `top-spec-workflow/POLICY.md`. Confirm `grill.json` is agreed before editing `api-contract.json`. Copy `identified.validations` from that grill. Write one `apis` entry per identified API, including method, path, requestExample, and responseExample. Write `contract-map.json` linking each UI field or action to an API id. The UI contract copies `screen.api` from that map. Use the API schema and preserve source traceability. Do not read requirements.md, design.md, or acceptance.md. Do not implement Java, invent database behavior, or modify `raw/`. Leave unresolved material behavior in `openQuestions`.

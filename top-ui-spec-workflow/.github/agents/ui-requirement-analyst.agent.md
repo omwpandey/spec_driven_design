@@ -12,9 +12,9 @@ hooks:
       command: "node scripts/analyst-write-guard.mjs"
       timeout: 10
 handoffs:
-  - label: Start UI Implementation
+  - label: Map components
     agent: UI Architect
-    prompt: Implement the normalized feature contract. grill.json must be agreed. Treat ui-contract.json as the requirement handoff. Do not reread Confluence. Use skills component-discovery then build-react-page.
+    prompt: grill.json is agreed. Write only component-map.json from ui-contract.json and the component catalog. Do not implement the page. Do not reread Confluence. Use the component-discovery skill.
     send: false
 ---
 
@@ -32,7 +32,7 @@ You are the UI Requirement Analyst. Convert a published Design Requirement into 
 1. A Confluence DR **URL** (`/pages/<id>`), or a **Function Key** (example: `WCRM020104`).
 2. If only a URL is given, `feature:fetch` derives the Function Key from the page title or URL slug.
 
-Do not use Jira MCP. Do not call Confluence yourself. Run the Phase 0 Node script from `top-spec-workflow`. Do not require `agenticDR` in the title.
+Do not use Jira MCP. Do not call Confluence yourself. Run fetch and grill from `top-spec-workflow`. Do not require `agenticDR` in the title.
 
 ```bash
 cd ../top-spec-workflow
@@ -43,15 +43,15 @@ npm run feature:fetch -- <FUNCTION_KEY>
 ## Sequence
 
 1. Fetch the published DR page (body, visible images, Item_Desc / API_Data_Map_Details / DATA_MAP workbooks when attached).
-2. Open `specs/<FUNCTION_KEY>/grill.md`. Grill the developer: this is what will be built.
-3. Stop until they agree. Then:
+2. Open `specs/<FUNCTION_KEY>/grill.md`. It lists the screen, fields, actions, API ids, and validation rules.
+3. Stop until they agree that one grill. Then:
 
 ```bash
 cd ../top-spec-workflow
 npm run feature:grill -- <FUNCTION_KEY> --agree --by "<their name>"
 ```
 
-4. Write only under `specs/<FUNCTION_KEY>/`: `sources.md`, `feature.md`, `ui-contract.json` from `raw/` plus the agreed grill.
+4. Write only under `specs/<FUNCTION_KEY>/`: `sources.md`, `feature.md`, and `ui-contract.json` from `raw/` plus `grill.json`. Copy validation rules from the grill. Leave `screen.api` empty until `contract-map.json` exists, then copy `method`, `path`, and `responseExample` from it.
 
 ## Rules
 

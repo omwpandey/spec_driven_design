@@ -50,15 +50,6 @@ function agentLabel(value) {
   return String(value ?? "");
 }
 
-export function isKiroRuntime(payload = {}) {
-  if (process.env.UI_HOOK_RUNTIME === "kiro") return true;
-  if (process.env.KIRO || process.env.KIRO_AGENT || process.env.KIRO_AGENT_NAME) return true;
-  const hint = [payload?.runtime, payload?.source, payload?.client, payload?.ide]
-    .map((v) => String(v ?? "").toLowerCase())
-    .join(" ");
-  return /\bkiro\b/.test(hint);
-}
-
 export function detectAgent(payload) {
   const keys = [
     payload?.agent,
@@ -70,11 +61,11 @@ export function detectAgent(payload) {
     payload?.activeAgent,
     payload?.agent_id,
     payload?.agentId,
-    process.env.KIRO_AGENT,
-    process.env.KIRO_AGENT_NAME,
   ];
   const text = keys.map(agentLabel).join(" ").toLowerCase();
   if (/requirement[-_ ]?analyst|ui-requirement-analyst|ui requirement analyst/.test(text)) return "analyst";
+  if (/test[-_ ]?script[-_ ]?developer|test script developer/.test(text)) return "tester";
+  if (/ui[-_ ]?developer|ui developer/.test(text)) return "developer";
   if (/ui[-_ ]?reviewer|ui reviewer/.test(text)) return "reviewer";
   if (/ui[-_ ]?architect|ui architect/.test(text)) return "architect";
   if (/\breviewer\b/.test(text)) return "reviewer";
@@ -182,7 +173,34 @@ export function isComponentMapPath(p) {
 
 /** Analyst may only touch these artifacts under specs/<ID>/. */
 export function isAnalystAllowedPath(p) {
-  return /^specs\/[^/]+\/(sources\.md|requirements\.md|feature\.md|design\.md|tasks\.md|acceptance\.md|ui-contract\.json|grill\.md|grill\.json)$/.test(
+  return /^specs\/[^/]+\/(sources\.md|feature\.md|ui-contract\.json|grill\.md|grill\.json)$/.test(
     p,
+  );
+}
+
+/** Architect may only write the component map. */
+export function isArchitectAllowedPath(p) {
+  return isComponentMapPath(p);
+}
+
+/** Developer may write the screen module, its service, generated registries, and contract copy in the language files. */
+export function isDeveloperAllowedPath(p) {
+  return (
+    /^src\/modules\/[^/]+\//.test(p) ||
+    /^src\/services\/[^/]+Service\.ts$/.test(p) ||
+    p === "src/app/router/generatedRoutes.ts" ||
+    p === "src/core/manifest/generatedModuleRegistry.ts" ||
+    p === "src/mocks/generatedHandlers.ts" ||
+    p === "src/core/languages/en.ts" ||
+    p === "src/core/languages/th.ts"
+  );
+}
+
+/** Test Script Developer may write tests and the test report. */
+export function isTesterAllowedPath(p) {
+  return (
+    /^specs\/[^/]+\/test-report\.md$/.test(p) ||
+    /^src\/modules\/[^/]+\/.*\.(test|spec)\.(tsx|ts|jsx|js)$/.test(p) ||
+    /^src\/services\/.*\.(test|spec)\.ts$/.test(p)
   );
 }

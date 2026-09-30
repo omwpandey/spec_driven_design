@@ -4,11 +4,13 @@ import { specRoot } from "./lib/workspace.mjs";
 import {
   candidatePaths,
   detectAgent,
-  isKiroRuntime,
   featureIdFromFeaturesPath,
   featuresClaimingSrcFile,
   grillStatus,
   isAnalystAllowedPath,
+  isArchitectAllowedPath,
+  isDeveloperAllowedPath,
+  isTesterAllowedPath,
   isComponentMapPath,
   isContractPath,
   isEditLike,
@@ -49,11 +51,6 @@ function deny(reason) {
       },
     }),
   );
-  // Copilot/Cursor honor permission JSON and exit 0. Kiro PreToolUse blocks on non-zero.
-  if (isKiroRuntime(payload)) {
-    process.stderr.write(`${reason}\n`);
-    process.exit(2);
-  }
   process.exit(0);
 }
 
@@ -70,15 +67,11 @@ const cwd = String(payload.cwd ?? process.cwd());
 const toolName = String(payload.tool_name ?? payload.toolName ?? payload.tool ?? "");
 const toolInput = payload.tool_input ?? payload.toolInput ?? {};
 const agent = process.env.UI_HOOK_AGENT || detectAgent(payload);
-const eventName = String(payload.hook_event_name ?? payload.hookEventName ?? payload.trigger ?? "");
 const extraPath = {
   file_path: payload.file_path ?? payload.filePath ?? payload.path,
 };
 
-if (!isEditLike(toolName)) {
-  const kiroWrite = isKiroRuntime(payload) && /PreToolUse/i.test(eventName) && extraPath.file_path;
-  if (!kiroWrite) allow();
-}
+if (!isEditLike(toolName)) allow();
 
 const candidates = candidatePaths(toolInput, cwd, extraPath);
 const blob = `${JSON.stringify(toolInput)}\n${candidates.join("\n")}`;
@@ -94,6 +87,19 @@ for (const p of candidates.filter(isSrcUiPath)) {
 if (!candidates.length && agent === "analyst") {
   deny(
     "Requirement Analyst edit blocked because target path could not be verified. It may only write contract/grill artifacts under specs/<ID>/.",
+  );
+}
+if (!candidates.length && agent === "architect") {
+  deny("UI Architect edit blocked because target path could not be verified. It may only write specs/<ID>/component-map.json.");
+}
+if (!candidates.length && agent === "developer") {
+  deny(
+    "UI Developer edit blocked because target path could not be verified. It may only write the screen module, service, generated registries, and language files.",
+  );
+}
+if (!candidates.length && agent === "tester") {
+  deny(
+    "Test Script Developer edit blocked because target path could not be verified. It may only write test files and specs/<ID>/test-report.md.",
   );
 }
 
@@ -118,6 +124,29 @@ if (agent === "reviewer") {
   }
 }
 
+if (agent === "architect") {
+  const unsafe = candidates.filter((p) => !isArchitectAllowedPath(p));
+  if (unsafe.length) {
+    deny(`UI Architect may only write specs/<ID>/component-map.json. Blocked: ${unsafe.join(", ")}`);
+  }
+}
+
+if (agent === "developer") {
+  const unsafe = candidates.filter((p) => !isDeveloperAllowedPath(p));
+  if (unsafe.length) {
+    deny(
+      `UI Developer may only write the screen module, service, generated registries, and language files. Blocked: ${unsafe.join(", ")}`,
+    );
+  }
+}
+
+if (agent === "tester") {
+  const unsafe = candidates.filter((p) => !isTesterAllowedPath(p));
+  if (unsafe.length) {
+    deny(`Test Script Developer may only write test files and specs/<ID>/test-report.md. Blocked: ${unsafe.join(", ")}`);
+  }
+}
+
 const writingReview = candidates.some(isReviewMd);
 const writingSrc = candidates.some(isSrcUiPath);
 const writingContract = candidates.some(isContractPath);
@@ -131,7 +160,7 @@ if (writingSrc && !featureIds.size) {
   const pending = pendingGrillFeatureIds(cwd);
   if (pending.length) {
     deny(
-      `Pending grill for ${pending.join(", ")}. Include the Function Key / Story ID in the edit, or agree first: npm run feature:grill -- <ID> --agree --by "<name>"`,
+      `Pending grill for ${pending.join(", ")}. Include the Function Key in the edit, or agree first: npm run feature:grill -- <ID> --agree --by "<name>"`,
     );
   }
 }
@@ -151,7 +180,7 @@ for (const id of featureIds) {
     );
   }
   if (writingSrc) {
-    deny(`grill.json for ${id} is "${status}". Do not implement React until the developer agrees.`);
+    deny(`grill.json for ${id} is "${status}". Do not implement React until the developer agrees the grill.`);
   }
 }
 
@@ -168,5 +197,8 @@ if (writingSrc) {
 }
 
 if (agent === "analyst") allow({ additionalContext: "Write is within analyst-allowed feature artifacts." });
+if (agent === "architect") allow({ additionalContext: "Write is limited to component-map.json." });
+if (agent === "developer") allow({ additionalContext: "Write is limited to the screen module, service, registries, and language files." });
 if (agent === "reviewer") allow({ additionalContext: "Write is limited to review.md." });
+if (agent === "tester") allow({ additionalContext: "Write is limited to test files and test-report.md." });
 allow();

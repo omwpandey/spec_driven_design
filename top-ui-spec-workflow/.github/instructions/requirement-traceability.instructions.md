@@ -6,7 +6,7 @@ applyTo: "top-spec-workflow/specs/**/*"
 
 Every material business rule must be traceable to a source.
 
-The specs root is the shared `top-spec-workflow/specs` folder (`TOP_SPEC_ROOT` for Phase 0 scripts and `TOP_UI_SPEC_ROOT` for UI scripts), not a local `top-ui-spec-workflow/specs` folder.
+The specs root is the shared `top-spec-workflow/specs` folder (`TOP_SPEC_ROOT` for fetch and grill, and `TOP_UI_SPEC_ROOT` for UI scripts), not a local `top-ui-spec-workflow/specs` folder.
 
 Use source references like:
 

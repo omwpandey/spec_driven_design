@@ -6,7 +6,7 @@ argument-hint: Function Key=<key>
 handoffs:
   - label: Create/Update API Contract
     agent: API Contract Analyst
-    prompt: grill.json is agreed in top-spec-workflow. Create or update api-contract.json for this Function Key and validate it against schemas/api-contract.schema.json.
+    prompt: grill.json is agreed in top-spec-workflow. Create or update api-contract.json apis[] and contract-map.json for this Function Key. Copy validation rules from grill.json. Include method, path, requestExample, and responseExample. Validate both files. Do not leave the UI to invent mock paths.
     send: false
   - label: Generate Java Function
     agent: Java Function Developer
@@ -31,8 +31,8 @@ agent.
 ## Pipeline
 
 ```text
-Phase 1  Shared requirement agreement   top-spec-workflow           grill.json status = agreed
-Phase 2  API contract                   API Contract Analyst        api-contract.json schema-valid
+Phase 1  Shared grill agreement         top-spec-workflow           grill.json status = agreed
+Phase 2  API contract + contract map    API Contract Analyst        api-contract.json apis[] and contract-map.json
 Phase 3  Java implementation            Java Function Developer     generated files compile, follow framework rules
 Phase 4a Verification (tests)           Java Test Engineer          .feature scenarios pass
 Phase 4b Review                         Java Function Reviewer      review.md = PASS
@@ -40,13 +40,14 @@ Phase 4b Review                         Java Function Reviewer      review.md = 
 
 ### Phase 1: Shared requirement agreement (owner: top-spec-workflow)
 
-Confirm `top-spec-workflow/specs/<FUNCTION_KEY>/grill.json.status` is `agreed`. If not, stop and direct the
-developer back to `top-spec-workflow`'s grill workflow. Do not proceed.
+Confirm `top-spec-workflow/specs/<FUNCTION_KEY>/grill.json` status is `agreed`. If not, stop and direct the
+developer back to `npm run feature:grill -- <FUNCTION_KEY> --agree --by "<name>"`. Do not proceed.
+Copy `identified.validations` from that grill into the API contract.
 
 ### Phase 2: API contract (owner: API Contract Analyst)
 
 Gate: `top-spec-workflow/specs/<FUNCTION_KEY>/api-contract.json` exists and is schema-valid against
-`schemas/api-contract.schema.json`, with source references and `openQuestions` for anything unresolved.
+`schemas/api-contract.schema.json`, with one `apis` entry per identified API (`method`, `path`, `requestExample`, `responseExample`, shared validation errors). `contract-map.json` maps each UI field or action to an `apiId` and is valid against `schemas/contract-map.schema.json`. The UI mock cannot be generated until both files exist.
 
 ### Phase 3: Java implementation (owner: Java Function Developer)
 
@@ -58,7 +59,7 @@ function's `config/`, `dto/`, `repository/`, `processor/`, `support/`, and no fr
 ### Phase 4a: Verification (owner: Java Test Engineer)
 
 Gate: a `.feature` file exists under the service module's `src/test/resources/features/` and covers
-success, validation, and business-rejection scenarios from `acceptance.md`.
+success, validation, and business-rejection scenarios from `api-contract.json` `acceptanceCriteria`.
 
 ### Phase 4b: Review (owner: Java Function Reviewer)
 

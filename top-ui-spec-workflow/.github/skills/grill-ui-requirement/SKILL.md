@@ -6,13 +6,9 @@ argument-hint: "[function key]"
 
 # Grill UI requirement
 
-Do not implement React. Do not write `ui-contract.json` until `grill.json` status is `agreed`. Runbook: [specs/guides/PHASE-0.md](../../../../top-spec-workflow/specs/guides/PHASE-0.md).
+Do not implement React. Do not write `ui-contract.json` until `grill.json` status is `agreed`. Validation rules live once on that grill. Policy: [POLICY.md](../../../../top-spec-workflow/POLICY.md).
 
-Feature artifacts are under `TOP_UI_SPEC_ROOT/<FUNCTION_KEY>/`, normally `../top-spec-workflow/specs/<FUNCTION_KEY>/`. Run Phase 0 commands from `top-spec-workflow`.
-
-In **Cursor**, follow the interactive loop in [.cursor/skills/phase-0-grill/SKILL.md](../../../.cursor/skills/phase-0-grill/SKILL.md): run `feature:fetch` / `feature:grill` from a Confluence URL or Function Key (derive the key from the page title/URL when omitted). Use the structured question tool for agree/edit/reject, `--by` name, notes, and reject reason. Do not guess those values. Do not require `agenticDR` in the title.
-
-In **Kiro**, follow [.kiro/skills/grill-ui-requirement/SKILL.md](../../../.kiro/skills/grill-ui-requirement/SKILL.md). Ask one question at a time in chat (no structured question tool). Same fetch/grill commands and stop-until-agree rule.
+Feature artifacts are under `TOP_UI_SPEC_ROOT/<FUNCTION_KEY>/`, normally `../top-spec-workflow/specs/<FUNCTION_KEY>/`. Run fetch and grill from `top-spec-workflow`. Derive the Function Key from the page title or URL when the user gives only a URL. Do not guess the agree name, notes, or reject reason. Do not require `agenticDR` in the title.
 
 ## Required input
 
@@ -26,7 +22,7 @@ npm run feature:fetch -- <FUNCTION_KEY>
 
 ## Procedure
 
-1. Open `grill.md` and `raw/page.md`. List UX Design tasks (`UX-001`…), then counts: modes, fields, actions, APIs, missing.
+1. Open `grill.md` and `raw/page.md`. List UX Design tasks (`UX-001`…), then counts: fields, actions, APIs, validations, missing.
 2. Ask the developer, in chat, whether this is what to build. Call out gaps (`missing`, empty objective, no Item_Desc, no **UX Design** mockup). Only screens under UX Design are in scope; if several mockups, they are separate tasks (`UX-001`…).
 3. Apply their corrections only when they state them. Do not invent fields or validations to fill gaps.
 4. When they agree, run:

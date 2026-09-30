@@ -8,8 +8,8 @@ stops at any unmet gate.
 Work in `top-spec-workflow` first:
 
 1. Fetch the DR and preserve the raw source.
-2. Review and agree `grill.json`.
-3. Normalize requirements, design, acceptance criteria, and decisions.
+2. Review and agree `grill.json` once. Validation rules are `identified.validations` on that file.
+3. Write `ui-contract.json` and `api-contract.json` from that grill. Acceptance criteria live on the contracts.
 4. Resolve or explicitly record open questions.
 
 ## Phase 2: API contract
@@ -18,7 +18,9 @@ Work in `top-spec-workflow` first:
 
 Create `specs/<FUNCTION_KEY>/api-contract.json` in `top-spec-workflow` using [api-contract.schema.json](schemas/api-contract.schema.json).
 
-The API contract must have source references for entities, fields, actions, permissions, errors, and acceptance criteria. Do not infer undocumented table names, relationships, permissions, or validation rules.
+Also create `specs/<FUNCTION_KEY>/contract-map.json` using [contract-map.schema.json](schemas/contract-map.schema.json). This map links a UI field or action id to an API id. The UI track copies `method`, `path`, and `responseExample` into `ui-contract.json` `screen.api` from that map and does not invent them.
+
+Each identified API needs `id`, `method`, `path`, `requestExample`, `responseExample`, and the shared validation errors. The API contract must have source references for entities, fields, actions, permissions, errors, and acceptance criteria. Do not infer undocumented table names, relationships, permissions, or validation rules.
 
 ## Phase 3: Java implementation
 
@@ -53,7 +55,7 @@ Implement only what the API contract requires. Reuse `top-common` for routing, C
 
 **Owner:** Java Test Engineer agent (generation and test run), then Java Function Reviewer agent (review.md).
 
-Map `acceptance.md` scenarios to Cucumber features under
+Map `api-contract.json` `acceptanceCriteria` to Cucumber features under
 `<service-module>/src/test/resources/features/` and add unit tests only for custom processors, validators,
 and helpers. Run the selected service's build/test command and Java governance checks before review.
 

@@ -7,7 +7,7 @@ context: fork
 
 # Analyze UI Requirement
 
-Requirement normalization only; no React implementation. Require `specs/<ID>/grill.json` status `agreed`.
+Requirement normalization only; no React implementation. Require `specs/<ID>/grill.json` status `agreed`. Copy its validation rules into the contract. Fill `screen.api` from `contract-map.json` and `api-contract.json` `apis` after that map exists. Do not invent method, path, or mockResponse. Do not write requirements.md, design.md, tasks.md, acceptance.md, or decisions.md.
 
 Feature artifacts are under `TOP_UI_SPEC_ROOT/<FUNCTION_KEY>/`, normally `../top-spec-workflow/specs/<FUNCTION_KEY>/`. Treat `specs/<FUNCTION_KEY>/...` below as shorthand for that shared specs root.
 

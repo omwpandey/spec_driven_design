@@ -10,36 +10,37 @@ This repository is the source of truth for requirement material that may be cons
 
 ```text
  top-spec-workflow/
+ ├── POLICY.md
  ├── specs/
  │   └── <FUNCTION_KEY>/
  │       ├── raw/              # Confluence exports, images, spreadsheets
- │       ├── grill.json        # Developer agreement status
- │       ├── grill.md          # Reviewable scope summary
- │       ├── sources.md        # Traceability to source material
- │       ├── requirements.md   # Business requirements
- │       ├── design.md         # Shared design decisions
- │       ├── tasks.md           # Shared implementation tasks
- │       ├── acceptance.md     # Shared acceptance criteria
- │       ├── decisions.md      # ADRs
- │       └── feature.md        # Feature summary
+ │       ├── grill.json        # One agreement: fields, actions, APIs, validations
+ │       ├── grill.md          # Readable copy of that agreement
+ │       ├── sources.md        # Source ids
+ │       ├── feature.md        # One-page summary
+ │       ├── ui-contract.json  # Screen contract, including acceptance criteria
+ │       ├── api-contract.json # Identified APIs: method, path, examples, validation errors
+ │       ├── contract-map.json # UI field or action → API id
+ │       ├── component-map.json# React component choices only
+ │       ├── review.md         # UI review verdict
+ │       └── test-report.md    # UI test result
  └── README.md
 ```
 
-Technology-specific contracts do not belong here. They live in the corresponding workflow repository:
-
-- `top-ui-spec-workflow`: `ui-contract.json`, `component-map.json`, React validation, UI agents.
-- `top-api-spec-workflow`: `api-contract.json`, Java validation, Java generation guidance, API tests.
+The policy is [POLICY.md](./POLICY.md). `top-api-spec-workflow` writes `api-contract.json` and `contract-map.json` into this folder. `top-ui-spec-workflow` copies that map into `ui-contract.json` `screen.api`, then the UI Architect writes `component-map.json` and the UI Developer writes the page. React and Java source stay in the application repositories.
 
 ## Workflow
 
-1. From this repository, fetch the published DR into `specs/<FUNCTION_KEY>/raw/` with `TOP_SPEC_ROOT`.
-2. Review the generated grill pack with the team.
-3. Record agreement in `grill.json` before creating implementation contracts.
-4. Normalize only facts supported by the DR into shared artifacts.
-5. Create and validate UI/API contracts in their technology-specific repositories.
-6. Implement in `top-ui` and the Java application repository.
+Select one agent. [POLICY.md](./POLICY.md) is the runbook.
 
-The shared Phase 0 commands belong to this repository:
+1. **UI Requirement Analyst** fetches the DR, agrees `grill.json`, and writes `ui-contract.json`.
+2. **API Contract Analyst** writes `api-contract.json` and `contract-map.json`. The UI analyst copies `screen.api`.
+3. **UI Architect** writes `component-map.json`.
+4. **UI Developer** writes the page under `src/modules/<FUNCTION_KEY>/`.
+5. **UI Reviewer** writes `review.md`.
+6. **Test Script Developer** writes tests and `test-report.md`.
+
+Fetch and agree belong to this repository:
 
 ```powershell
 Push-Location top-spec-workflow
@@ -48,8 +49,6 @@ npm install
 npm run feature:fetch -- --url "<DR_URL>"
 Pop-Location
 ```
-
-For the complete sequential runbook, including the VS Code agent commands and validation gates, see [END_TO_END_GUIDE.md](./END_TO_END_GUIDE.md).
 
 Do not place application source code, generated Java code, or React code in this repository.
 

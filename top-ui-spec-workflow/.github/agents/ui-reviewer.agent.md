@@ -17,6 +17,11 @@ hooks:
     - type: command
       command: "node scripts/reviewer-write-guard.mjs"
       timeout: 10
+handoffs:
+  - label: Write UI tests
+    agent: Test Script Developer
+    prompt: review.md is written. Write tests from acceptanceCriteria on ui-contract.json and write specs/<FUNCTION_KEY>/test-report.md. Do not change the page or the contract. Use the write-ui-tests skill.
+    send: false
 ---
 
 # Role

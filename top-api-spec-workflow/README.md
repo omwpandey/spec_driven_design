@@ -138,4 +138,4 @@ java:generate <FUNCTION_KEY>
 api:test-scaffold <FUNCTION_KEY>
 ```
 
-Until then, review `top-spec-workflow/specs/<FUNCTION_KEY>/requirements.md`, `acceptance.md`, and `design.md`, then manually create `api-contract.json` with source references before generating Java code.
+Until then, review `top-spec-workflow/specs/<FUNCTION_KEY>/grill.json` and `raw/`, then create `api-contract.json` with source references before generating Java code. See `top-spec-workflow/POLICY.md`.

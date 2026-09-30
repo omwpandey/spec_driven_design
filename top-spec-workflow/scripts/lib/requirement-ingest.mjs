@@ -527,13 +527,36 @@ export async function workbookToMarkdown(filePath) {
   return { markdown: parts.join("\n"), sheets };
 }
 
+export function sheetIndexFromMarkdownFiles(sheetsDir) {
+  if (!sheetsDir || !fs.existsSync(sheetsDir)) return [];
+  const index = [];
+  for (const file of fs.readdirSync(sheetsDir)) {
+    if (!file.endsWith(".md")) continue;
+    const markdown = fs.readFileSync(path.join(sheetsDir, file), "utf8");
+    for (const table of parseMarkdownTables(markdown)) {
+      index.push({
+        workbook: file,
+        name: table.heading || file.replace(/\.md$/, ""),
+        rows: [table.header, ...table.rows],
+      });
+    }
+  }
+  return index;
+}
+
 export function parseMarkdownTables(md) {
   const lines = (md || "").split(/\r?\n/);
   const tables = [];
   let heading = "";
+  let headingStack = [];
   for (let i = 0; i < lines.length; i += 1) {
-    const h = lines[i].match(/^#{1,6}\s+(.*)/);
-    if (h) heading = normalizeHeading(h[1]);
+    const h = lines[i].match(/^(#{1,6})\s+(.*)/);
+    if (h) {
+      const level = h[1].length;
+      heading = normalizeHeading(h[2]);
+      headingStack = headingStack.filter((item) => item.level < level);
+      headingStack.push({ level, title: heading });
+    }
     if (/^\s*\|/.test(lines[i]) && i + 1 < lines.length && /^\s*\|[\s|:-]+$/.test(lines[i + 1])) {
       const header = splitMdRow(lines[i]);
       i += 2;
@@ -543,7 +566,7 @@ export function parseMarkdownTables(md) {
         i += 1;
       }
       i -= 1;
-      tables.push({ heading, header, rows });
+      tables.push({ heading, parents: headingStack.map((item) => item.title), header, rows });
     }
   }
   return tables;
@@ -720,9 +743,111 @@ export function buildIdentification({
       images: uxImages.length ? uxImages : images || [],
       workbooks: xlsx,
       missing: gapMissing,
+      validations: extractValidations({ markdown, sheetIndex }),
     },
     agreement: null,
   };
+}
+
+export const GRILL_JSON = "grill.json";
+export const GRILL_MD = "grill.md";
+
+export function extractValidations({ markdown, sheetIndex }) {
+  const found = [];
+  const tables = parseMarkdownTables(markdown);
+  for (const table of tables) {
+    const headings = [table.heading, ...(table.parents || [])];
+    if (!headings.some((title) => /validat/i.test(title || ""))) continue;
+    for (const row of compactRows(table, 80)) {
+      const event = row.Event || "";
+      const cause = row.Cause || row.cause || "";
+      const message = row["Display Message"] || row["Log Message"] || row.Message || row["Error Message"] || "";
+      const rule = meaningfulRule([event, cause].filter(Boolean).join(": "));
+      const display = meaningfulRule(message);
+      if (!rule && !display) continue;
+      const sourceHeading = headings.find((title) => /validat/i.test(title || "")) || table.heading;
+      found.push({
+        rule: rule || display,
+        message: display,
+        source: `dr-page:${sourceHeading}`,
+      });
+    }
+  }
+
+  const lines = String(markdown || "").split(/\r?\n/);
+  let heading = "";
+  let capture = false;
+  let sectionLevel = 0;
+  for (const line of lines) {
+    const h = line.match(/^(#{1,6})\s+(.*)/);
+    if (h) {
+      const level = h[1].length;
+      const title = normalizeHeading(h[2]);
+      if (/validat/i.test(title)) {
+        capture = true;
+        sectionLevel = level;
+        heading = title;
+      } else if (capture && level <= sectionLevel) {
+        capture = false;
+      } else if (capture) {
+        heading = title;
+      }
+      continue;
+    }
+    if (!capture) continue;
+    const bullet = line.match(/^\s*[-*]\s+(.*)/);
+    if (!bullet) continue;
+    const rule = meaningfulRule(bullet[1]);
+    if (!rule) continue;
+    found.push({ rule, message: "", source: `dr-page:${heading}` });
+  }
+
+  const itemSheet = findSheet(sheetIndex, /ui\s*components/i);
+  for (const row of sheetObjects(itemSheet)) {
+    const mandatory = String(row["Mandatory (Y/N)"] || row.Mandatory || "").trim().toUpperCase();
+    const label = row["Field_me-Eng"] || row["Field_Name-Eng"] || row["Field Name"] || row.Field || "";
+    if (mandatory !== "Y" || !label) continue;
+    found.push({
+      rule: `${label} is mandatory`,
+      message: "",
+      source: `item-desc:${itemSheet?.name || "ui-components"}:mandatory`,
+    });
+  }
+
+  const eventSheet = findSheet(sheetIndex, /ui\s*event/i);
+  for (const row of sheetObjects(eventSheet)) {
+    const logic = String(row.Processing_Logic || "");
+    const error = String(row.Error_Message || "");
+    if (!/validat/i.test(`${logic} ${error}`)) continue;
+    const rule = meaningfulRule(logic) || meaningfulRule(error);
+    if (!rule) continue;
+    const eventId = row.Event_id || row.Event_ID || "";
+    found.push({
+      rule: rule.slice(0, 400),
+      message: meaningfulRule(error).slice(0, 240),
+      source: `item-desc:${eventSheet?.name || "ui-events"}${eventId ? `:${eventId}` : ""}`,
+    });
+  }
+
+  return uniqueBy(found, (item) => `${item.rule.toLowerCase()}|${item.source.toLowerCase()}`);
+}
+
+function meaningfulRule(text) {
+  const normalized = String(text || "")
+    .replace(/&mdash;/g, "—")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!normalized) return "";
+  const detail = normalized.includes(":") ? normalized.slice(normalized.indexOf(":") + 1).trim() : normalized;
+  if (/^(n\/a|na)\b/i.test(detail)) return "";
+  if (/not stated in the business document|not applicable to this screen|this screen has no upload/i.test(detail)) return "";
+  return normalized;
+}
+
+function sheetObjects(sheet) {
+  if (!sheet?.rows?.length) return [];
+  const header = sheet.rows[0] || [];
+  return sheet.rows.slice(1, 81).map((row) => Object.fromEntries(header.map((h, i) => [h, row[i] || ""])));
 }
 
 function normalizeSheetName(name) {
@@ -787,118 +912,128 @@ function extractSection(md, heading) {
   return buf.join("\n").replace(/!\[[^\]]*\]\([^)]+\)/g, "").trim();
 }
 
+function appendValidations(lines, validations) {
+  lines.push("## Validation rules", "");
+  lines.push("Stored once on this grill. The UI contract and the API contract copy this list. They do not keep a second copy.", "");
+  if (!validations?.length) {
+    lines.push("_No validation rules extracted. Check Validation sections, mandatory Item_Desc flags, and UI event errors._", "");
+    return;
+  }
+  lines.push("| Rule | Message | Source |", "|---|---|---|");
+  for (const rule of validations) {
+    lines.push(`| ${esc(rule.rule)} | ${esc(rule.message)} | ${esc(rule.source)} |`);
+  }
+  lines.push("");
+}
+
+function appendAccess(lines, permissions) {
+  lines.push("## Access", "");
+  if (!permissions?.length) {
+    lines.push("_No Access Control table found._", "");
+    return;
+  }
+  const keys = [...new Set(permissions.flatMap((row) => Object.keys(row)))];
+  lines.push(`| ${keys.join(" | ")} |`, `| ${keys.map(() => "---").join(" | ")} |`);
+  for (const row of permissions) lines.push(`| ${keys.map((key) => esc(row[key] || "")).join(" | ")} |`);
+  lines.push("");
+}
+
 export function renderGrillMarkdown(id) {
-  const i = id.identified;
-  const status = id.status;
+  const identified = id.identified || {};
+  const screens = identified.screens || [];
   const lines = [
     `# Grill: ${id.functionKey}`,
     "",
-    `**Status:** \`${status}\``,
-    `**DR page:** ${id.page.title}`,
-    `**URL:** ${id.page.url}`,
-    `**Version:** ${id.page.version ?? "unknown"}`,
+    `**Status:** \`${id.status}\``,
+    `**DR page:** ${id.page?.title || ""}`,
+    `**URL:** ${id.page?.url || ""}`,
+    `**Version:** ${id.page?.version ?? "unknown"}`,
     "",
-    "This is what the fetch identified to **design and implement**. Nothing below is implemented yet.",
-    "Review it. Correct it in chat if needed. Then agree before the UI contract or React work starts.",
+    "This is the full scope identified from the DR: screen, fields, actions, APIs, and validation rules.",
+    "Agree it once. Both contracts are written from this file. Do not create a second grill.",
+    "",
+    "## Screen logic",
+    "",
+    identified.objective ? `**Objective:** ${identified.objective}` : "**Objective:** _not found in DR body_",
+    "",
+    identified.preCondition ? `**Pre-condition:** ${identified.preCondition}` : "**Pre-condition:** _not found_",
+    "",
+    identified.postCondition ? `**Post-condition:** ${identified.postCondition}` : "**Post-condition:** _not found_",
     "",
     "## Screens to build (UX Design only)",
     "",
   ];
-  const screens = i.screens || [];
   if (!screens.length) {
-    lines.push(
-      "_No screen mockup under **UX Design**. Other page images were not fetched. Add UX Design mockups, or reject this grill._",
-      "",
-    );
+    lines.push("_No screen mockup under **UX Design**. Other page images were not fetched._", "");
   } else {
-    if (screens.length === 1) {
-      lines.push("**One screen** — this Function Key is a single implementation pass.", "");
-    } else {
-      lines.push(
-        `**${screens.length} screens** — each UX Design mockup is its own task. Agree this list; implement **one task per Phase 2 pass**. Do not bundle.`,
-        "",
-      );
-    }
     lines.push("| Task | Screen | Image |", "|---|---|---|");
-    for (const s of screens) lines.push(`| ${s.id} | ${esc(s.title)} | \`${s.image}\` |`);
+    for (const screen of screens) lines.push(`| ${screen.id} | ${esc(screen.title)} | \`${screen.image}\` |`);
     lines.push("");
   }
-  lines.push(
-    "## Screen logic",
-    "",
-    i.objective ? `**Objective:** ${i.objective}` : "**Objective:** _not found in DR body_",
-    "",
-    i.preCondition ? `**Pre-condition:** ${i.preCondition}` : "**Pre-condition:** _not found_",
-    "",
-    i.postCondition ? `**Post-condition:** ${i.postCondition}` : "**Post-condition:** _not found_",
-    "",
-    "## Screen modes",
-    "",
-  );
-  if (!i.modes.length) lines.push("_No Screen Mode table found._", "");
+  lines.push("## Screen modes", "");
+  if (!identified.modes?.length) lines.push("_No Screen Mode table found._", "");
   else {
     lines.push("| Mode | Section | Description |", "|---|---|---|");
-    for (const m of i.modes) lines.push(`| ${m.name} | ${m.section} | ${esc(m.description)} |`);
+    for (const mode of identified.modes) lines.push(`| ${mode.name} | ${mode.section} | ${esc(mode.description)} |`);
     lines.push("");
   }
   lines.push("## Fields (page + Item_Desc)", "");
-  if (!i.fields.length) lines.push("_No fields extracted. Check Display Order and Item_Desc sheets._", "");
+  if (!identified.fields?.length) lines.push("_No fields extracted._", "");
   else {
     lines.push("| Field | Section | Source |", "|---|---|---|");
-    for (const f of i.fields) lines.push(`| ${esc(f.label)} | ${esc(f.section)} | ${f.source} |`);
+    for (const field of identified.fields) lines.push(`| ${esc(field.label)} | ${esc(field.section)} | ${field.source} |`);
     lines.push("");
   }
   lines.push("## Actions / buttons / events", "");
-  if (!i.actions.length) lines.push("_No actions extracted._", "");
+  if (!identified.actions?.length) lines.push("_No actions extracted._", "");
   else {
     lines.push("| Action | State / note | Source |", "|---|---|---|");
-    for (const a of i.actions) lines.push(`| ${esc(a.label)} | ${esc(a.state)} | ${a.source} |`);
-    lines.push("");
-  }
-  lines.push("## Access", "");
-  if (!i.permissions.length) lines.push("_No Access Control table found._", "");
-  else {
-    const keys = [...new Set(i.permissions.flatMap((r) => Object.keys(r)))];
-    lines.push(`| ${keys.join(" | ")} |`, `| ${keys.map(() => "---").join(" | ")} |`);
-    for (const r of i.permissions) lines.push(`| ${keys.map((k) => esc(r[k] || "")).join(" | ")} |`);
+    for (const action of identified.actions) lines.push(`| ${esc(action.label)} | ${esc(action.state)} | ${action.source} |`);
     lines.push("");
   }
   lines.push("## APIs (from workbook)", "");
-  if (!i.apis.length) lines.push("_No API rows extracted. Check API_Data_Map_Details sheets._", "");
+  if (!identified.apis?.length) lines.push("_No API rows extracted. Check API_Data_Map_Details sheets._", "");
   else {
-    for (const a of i.apis) lines.push(`- ${esc(a.value)} (${a.source})`);
+    for (const api of identified.apis) lines.push(`- ${esc(api.value)} (${api.source})`);
     lines.push("");
   }
   lines.push("## UX images (UX Design section only)", "");
-  if (!screens.length) lines.push("_None — only mockups under UX Design are fetched._", "");
-  else for (const s of screens) lines.push(`- \`${s.image}\` (${esc(s.title)})`);
-  lines.push("", "## Workbooks", "");
-  for (const prefix of XLSX_PREFIXES) {
-    lines.push(`- ${prefix}*: ${i.workbooks[prefix] ? `\`${i.workbooks[prefix]}\`` : "**missing**"}`);
+  if (!screens.length) lines.push("_None._", "");
+  else for (const screen of screens) lines.push(`- \`${screen.image}\` (${esc(screen.title)})`);
+  lines.push("");
+
+  appendAccess(lines, identified.permissions);
+  appendValidations(lines, identified.validations);
+
+  const workbooks = identified.workbooks || {};
+  lines.push("## Workbooks", "");
+  for (const prefix of ["Item_Desc_", "API_Data_Map_Details_", "DATA_MAP_"]) {
+    lines.push(`- ${prefix}*: ${workbooks[prefix] ? `\`${workbooks[prefix]}\`` : "**missing**"}`);
   }
-  if (i.missing?.length) {
+  if (identified.missing?.length) {
     lines.push("", "## Missing from attachments", "");
-    for (const name of i.missing) lines.push(`- ${name}`);
+    for (const name of identified.missing) lines.push(`- ${name}`);
   }
   lines.push(
     "",
     "## Agree",
     "",
-    "If this list is wrong, say what to drop or add. Do not start React until status is `agreed`.",
+    "If this list is wrong, say what to drop or add. Do not write a contract or React until status is `agreed`.",
+    "Record a product change that is not in the DR as an agreement note. The contract later cites it as `developer-decision-NNN`.",
     "",
     "```bash",
     `npm run feature:grill -- ${id.functionKey} --agree --by "<your name>"`,
     "```",
-    ""
+    "",
   );
   if (id.agreement) {
     lines.push(
       `Agreed by **${id.agreement.by}** at ${id.agreement.at}.`,
       id.agreement.notes ? `Notes: ${id.agreement.notes}` : "",
-      ""
+      "",
     );
   }
-  return lines.filter((x) => x !== undefined).join("\n");
+  return lines.filter((line) => line !== undefined).join("\n");
 }
 
 function esc(value) {

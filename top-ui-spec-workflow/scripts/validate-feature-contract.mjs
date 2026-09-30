@@ -97,9 +97,11 @@ const grillFile = path.join(specRoot, storyId, "grill.json");
 if (fs.existsSync(grillFile)) {
   try {
     const grill = JSON.parse(fs.readFileSync(grillFile, "utf8"));
-    if (grill.status !== "agreed") errors.push(`grill.json status is "${grill.status}". Developer must agree before this feature is ready.`);
+    if (grill.status !== "agreed") {
+      errors.push(`grill.json status is "${grill.status}". Developer must agree the grill before this feature is ready.`);
+    }
   } catch (error) {
-    errors.push(`grill.json is invalid JSON: ${error.message}`);
+    errors.push(`${path.basename(grillFile)} is invalid JSON: ${error.message}`);
   }
 }
 

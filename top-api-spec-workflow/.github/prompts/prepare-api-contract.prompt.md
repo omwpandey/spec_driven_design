@@ -14,9 +14,8 @@ generation and review must consume that validated contract, not these notes.
 ## Preconditions
 
 1. Locate `top-spec-workflow/specs/<FUNCTION_KEY>/`.
-2. Confirm `grill.json.status` is `agreed`; otherwise stop.
-3. Read `grill.json`, `grill.md`, `requirements.md`, `design.md`, `acceptance.md`, `sources.md`, and
-   relevant files under `raw/`.
+2. Confirm `grill.json` status is `agreed`; otherwise stop. Validation rules are `identified.validations` on that file.
+3. Read `grill.json`, `grill.md`, `sources.md`, and relevant files under `raw/`. Do not read requirements.md, design.md, or acceptance.md.
 
 Attached DR documents, spreadsheets, mock-ups, and existing functions may provide supporting evidence,
 but they do not replace the shared feature artifacts.

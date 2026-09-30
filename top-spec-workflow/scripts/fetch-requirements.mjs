@@ -30,6 +30,8 @@ import {
   workbookToMarkdown,
   buildIdentification,
   renderGrillMarkdown,
+  GRILL_JSON,
+  GRILL_MD,
   writeJson,
   readJson,
   ensureDir,
@@ -126,15 +128,7 @@ async function main() {
   ensureDir(path.join(raw, "xlsx"));
   ensureDir(path.join(raw, "sheets"));
 
-  let summary = null;
-  const grillPath = path.join(root, "grill.json");
-  if (fs.existsSync(grillPath) && !args.force) {
-    try {
-      summary = readJson(grillPath);
-    } catch {
-      summary = null;
-    }
-  }
+  const previous = readPreviousGrill(path.join(root, GRILL_JSON), args.force);
 
   writeJson(path.join(raw, "meta.json"), {
     functionKey: key,
@@ -238,13 +232,13 @@ async function main() {
     screens: ux.screens,
   });
 
-  if (summary?.status === "agreed" && summary.page?.version === identification.page.version && !args.force) {
-    identification.status = "agreed";
-    identification.agreement = summary.agreement;
+  applyPreviousAgreement(identification, previous);
+  fs.writeFileSync(path.join(root, GRILL_MD), renderGrillMarkdown(identification), "utf8");
+  writeJson(path.join(root, GRILL_JSON), identification);
+  for (const name of ["ui-grill.json", "ui-grill.md", "api-grill.json", "api-grill.md"]) {
+    const stale = path.join(root, name);
+    if (fs.existsSync(stale)) fs.unlinkSync(stale);
   }
-
-  fs.writeFileSync(path.join(root, "grill.md"), renderGrillMarkdown(identification), "utf8");
-  writeJson(path.join(root, "grill.json"), identification);
 
   if (!fs.existsSync(path.join(root, "sources.md"))) {
     fs.writeFileSync(
@@ -282,9 +276,26 @@ async function main() {
   }
   console.log(`  images fetched: ${imageNames.length}`);
   console.log(`  xlsx: ${Object.values(xlsxSaved).join(", ") || "(none)"}`);
-  console.log(`  grill: ${identification.status} -> ${path.relative(cwd, path.join(root, "grill.md"))}`);
+  console.log(`  grill: ${identification.status} -> ${path.relative(cwd, path.join(root, GRILL_MD))}`);
+  console.log(`  validations: ${identification.identified.validations.length}`);
   if (identification.status !== "agreed") {
-    console.log(`  next: review grill.md then  npm run feature:grill -- ${key} --agree --by "<name>"`);
+    console.log(`  next: npm run feature:grill -- ${key} --agree --by "<name>"`);
+  }
+}
+
+function readPreviousGrill(file, force) {
+  if (force || !fs.existsSync(file)) return null;
+  try {
+    return readJson(file);
+  } catch {
+    return null;
+  }
+}
+
+function applyPreviousAgreement(pack, previous) {
+  if (previous?.status === "agreed" && previous.page?.version === pack.page.version) {
+    pack.status = "agreed";
+    pack.agreement = previous.agreement ?? null;
   }
 }
 

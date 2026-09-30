@@ -45,7 +45,7 @@ crm_error_messages.json entries touched by this change
    annotation, security filter, pagination code, DTO mapper, custom repository query method, field
    `@Autowired`, wrong Jackson import, or Java `enum` on a status field.
 4. **Test coverage** — the `.feature` file covers success, validation, business rejection, and permission
-   scenarios from `acceptance.md`; concurrency-sensitive functions include the guard-blocked scenario.
+   scenarios from `api-contract.json` `acceptanceCriteria`; concurrency-sensitive functions include the guard-blocked scenario.
 
 ## Output
 

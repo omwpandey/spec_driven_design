@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://top.example/schemas/contract-map.schema.json",
+  "title": "TOP UI-to-API Contract Map",
+  "type": "object",
+  "required": ["schemaVersion", "functionKey", "mappings"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "functionKey": { "type": "string", "minLength": 1 },
+    "mappings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["uiId", "apiId", "when"],
+        "properties": {
+          "uiId": { "type": "string", "minLength": 1 },
+          "apiId": { "type": "string", "minLength": 1 },
+          "when": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

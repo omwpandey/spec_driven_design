@@ -12,8 +12,8 @@ This repository defines and validates API contracts for the TOP Java implementat
 
 ## Contract-first rules
 
-1. Read `requirements.md`, `design.md`, `acceptance.md`, `sources.md`, and `grill.json` from `top-spec-workflow`.
-2. Do not create an API contract until the grill is `agreed`.
+1. Read `grill.json`, `sources.md`, and `raw/` from `top-spec-workflow`. The policy is `top-spec-workflow/POLICY.md`.
+2. Do not create an API contract until `grill.json` is `agreed`. Copy `identified.validations` into the API contract. There is no second grill.
 3. Every entity, field, action, permission, error, and acceptance criterion needs a source reference or an explicit open question.
 4. Do not invent table names, relationships, permissions, validation rules, error codes, or endpoint behavior.
 5. Keep `api-contract.json` separate from `ui-contract.json` and runtime Java configuration.

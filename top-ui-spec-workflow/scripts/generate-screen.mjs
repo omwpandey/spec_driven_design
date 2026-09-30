@@ -25,7 +25,7 @@ if (contract.feature?.id !== storyId) {
 
 const title = contract.feature.title || storyId;
 const route = contract.screen?.route;
-const api = contract.screen?.api;
+const api = resolveScreenApi(specRoot, storyId, contract.screen?.api);
 if (!route) {
   console.error(`[screen:generate] screen.route is required for ${storyId}`);
   process.exit(1);
@@ -207,4 +207,57 @@ function readGeneratedEntries(file, kind) {
     entries[match[1]] = { route: match[2], componentName: kind === "routes" ? match[3].replace(new RegExp(`_${match[1]}$`), "") : match[3] };
   }
   return entries;
+}
+
+function resolveScreenApi(root, storyId, screenApi) {
+  const mapFile = path.join(root, storyId, "contract-map.json");
+  const apiFile = path.join(root, storyId, "api-contract.json");
+  if (!fs.existsSync(mapFile) || !fs.existsSync(apiFile)) {
+    console.error(`[screen:generate] ${storyId} needs api-contract.json and contract-map.json before a mock can be generated.`);
+    process.exit(1);
+  }
+  const contractMap = JSON.parse(fs.readFileSync(mapFile, "utf8"));
+  const apiContract = JSON.parse(fs.readFileSync(apiFile, "utf8"));
+  const apis = new Map((apiContract.apis ?? []).filter((item) => item?.id).map((item) => [item.id, item]));
+  const mappings = Array.isArray(contractMap.mappings) ? contractMap.mappings : [];
+  if (!apis.size || !mappings.length) {
+    console.error(`[screen:generate] api-contract.json apis and contract-map.json mappings are required for ${storyId}.`);
+    process.exit(1);
+  }
+  if (!Array.isArray(screenApi) || !screenApi.length) {
+    console.error(`[screen:generate] screen.api must list every API from contract-map.json for ${storyId}.`);
+    process.exit(1);
+  }
+  const used = new Set();
+  const resolved = [];
+  for (const definition of screenApi) {
+    const mapping = mappings.find((item) => item.apiId === definition.id || item.uiId === definition.id);
+    const apiDef = apis.get(definition.id) || (mapping ? apis.get(mapping.apiId) : undefined);
+    if (!mapping || !apiDef) {
+      console.error(`[screen:generate] screen.api id ${definition.id} is not linked by contract-map.json to an api-contract.json api.`);
+      process.exit(1);
+    }
+    if (definition.method && definition.method !== apiDef.method) {
+      console.error(`[screen:generate] ${apiDef.id} method ${definition.method} does not match api-contract ${apiDef.method}.`);
+      process.exit(1);
+    }
+    if (definition.path && definition.path !== apiDef.path) {
+      console.error(`[screen:generate] ${apiDef.id} path ${definition.path} does not match api-contract ${apiDef.path}.`);
+      process.exit(1);
+    }
+    used.add(apiDef.id);
+    resolved.push({
+      ...definition,
+      id: apiDef.id,
+      method: apiDef.method,
+      path: apiDef.path,
+      mockResponse: definition.mockResponse ?? apiDef.responseExample,
+    });
+  }
+  const missing = [...new Set(mappings.map((item) => item.apiId).filter((apiId) => !used.has(apiId)))];
+  if (missing.length) {
+    console.error(`[screen:generate] screen.api is missing contract-map APIs: ${missing.join(", ")}`);
+    process.exit(1);
+  }
+  return resolved;
 }

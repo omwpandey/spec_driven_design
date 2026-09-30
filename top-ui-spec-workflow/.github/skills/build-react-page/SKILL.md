@@ -6,16 +6,18 @@ argument-hint: "[story id]"
 
 # Build React Page
 
+Owner: UI Developer. Do not edit `ui-contract.json` or `component-map.json`.
+
 Read required spec artifacts from `TOP_UI_SPEC_ROOT/<STORY-ID>/`, normally `../top-spec-workflow/specs/<STORY-ID>/`. Treat `specs/<STORY-ID>/...` below as shorthand for that shared specs root.
 
 Required inputs:
 
-- `specs/<STORY-ID>/grill.json` status `agreed` when a grill file exists
+- `specs/<STORY-ID>/grill.json` status `agreed`
 - `specs/<STORY-ID>/ui-contract.json`
 - `specs/<STORY-ID>/component-map.json`
 - `src/components/COMPONENT_CATALOG.md`
 
-If `grill.json` exists and status is not `agreed`, stop. If a blocking open question would force invented business behavior, stop.
+If `grill.json` status is not `agreed`, stop. If a blocking open question would force invented business behavior, stop. Use the validation rules on the UI contract.
 
 Do not reread Confluence or `raw/`. Do not create `src/comp`.
 

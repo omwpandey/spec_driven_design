@@ -12,7 +12,19 @@ top-ui-spec-workflow    # React-specific agents, component maps, and UI validati
 top-api-spec-workflow   # Java/API-specific agents, API contracts, and Java validation
 ```
 
-Shared DR artifacts and Phase 0 commands are maintained in `top-spec-workflow`. API contracts and Java-specific workflow are maintained in `top-api-spec-workflow`.
+Shared DR artifacts and the fetch and grill commands are maintained in `top-spec-workflow`. API contracts and the Java workflow are maintained in `top-api-spec-workflow`.
+
+## UI agents
+
+Select one agent. Each agent writes only the files in its row. The policy is [POLICY.md](../top-spec-workflow/POLICY.md).
+
+| Agent | Writes |
+|---|---|
+| UI Requirement Analyst | agreed `grill.json`, then `sources.md`, `feature.md`, `ui-contract.json` |
+| UI Architect | `component-map.json` |
+| UI Developer | `src/modules/<FUNCTION_KEY>/` and the feature service |
+| UI Reviewer | `review.md` |
+| Test Script Developer | tests and `test-report.md` |
 
 ## Repository boundary
 
@@ -32,7 +44,7 @@ npm run screen:generate -- WCRM030103
 npm run ui:guard
 ```
 
-`TOP_UI_SPEC_ROOT` must point to the shared `top-spec-workflow\specs` directory. Run `feature:fetch`, `feature:init`, and `feature:grill` from `top-spec-workflow`; this repository owns only UI contract, component-map, generation, and validation commands.
+`TOP_UI_SPEC_ROOT` must point to the shared `top-spec-workflow\specs` directory. Run `feature:fetch` and `feature:grill` from `top-spec-workflow`. This repository owns the UI contract check, component map, screen generation, and UI validation.
 
 ## Contract boundary
 
@@ -40,7 +52,7 @@ The normalized UI contract is stored under `TOP_UI_SPEC_ROOT\<FUNCTION_KEY>\ui-c
 
 ## Project UI Review Standard
 
-Use [docs/UI_REVIEW_CHECKLIST.md](docs/UI_REVIEW_CHECKLIST.md) for the complete project-wide standard. For a focused manual review, use [docs/UI_MANUAL_REVIEW_CHECKLIST.md](docs/UI_MANUAL_REVIEW_CHECKLIST.md). Feature-specific findings belong in `TOP_UI_SPEC_ROOT\<FUNCTION_KEY>\review.md`.
+Use [docs/UI_AGENTIC_REVIEW_CHECKLIST.md](docs/UI_AGENTIC_REVIEW_CHECKLIST.md) for the project-wide standard. For a manual pass, use [docs/UI_REVIEW_CHECKLIST.md](docs/UI_REVIEW_CHECKLIST.md). Feature-specific findings belong in `TOP_UI_SPEC_ROOT\<FUNCTION_KEY>\review.md`.
 
 ## Generated application structure
 

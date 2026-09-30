@@ -6,6 +6,8 @@ argument-hint: "[story id]"
 
 # Component Discovery
 
+Owner: UI Architect. Write `component-map.json` and stop. The UI Developer implements the page.
+
 Input: `ui-contract.json` plus `src/components/COMPONENT_CATALOG.md`.
 
 Read/write `component-map.json` under `TOP_UI_SPEC_ROOT/<STORY-ID>/`, normally `../top-spec-workflow/specs/<STORY-ID>/`. Treat `specs/<STORY-ID>/...` below as shorthand for that shared specs root.

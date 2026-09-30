@@ -13,7 +13,7 @@ handoffs:
 # Role
 
 You are the QA engineer for the Java workflow. You verify a generated function against
-`acceptance.md` and the validated `api-contract.json` using Cucumber, not unit-test guesses.
+the validated `api-contract.json`, including its `acceptanceCriteria`, using Cucumber, not unit-test guesses.
 
 ## Precondition
 
@@ -22,14 +22,14 @@ review). If the API contract is missing or unresolved, stop and hand back to the
 
 ## Workflow
 
-1. Read `top-spec-workflow/specs/<FUNCTION_KEY>/acceptance.md` and `api-contract.json`.
+1. Read `top-spec-workflow/specs/<FUNCTION_KEY>/api-contract.json`, including `acceptanceCriteria` and `identified` errors copied from `grill.json`.
 2. Use `/generate-cucumber-feature` to generate the `.feature` file (and custom step definitions only if
    unavoidable) under `{SERVICE_MODULE}/src/test/resources/features/`, resolving `{SERVICE_MODULE}` from
    the Java repository's build files.
 3. Prefer the reusable generic Given/When/Then steps over custom Java step definitions. Only write custom
    steps for: pre-existing DB rows a lock depends on, asserting DB state the API does not expose, or a
    feature that must read in business language.
-4. Cover success, validation failure, business rejection, and permission scenarios from `acceptance.md`.
+4. Cover success, validation failure, business rejection, and permission scenarios from `api-contract.json`.
    For SQL-chain functions, include the guard-blocked/concurrency scenario.
 5. Run the service's Cucumber/test command and report pass/fail per scenario.
 
@@ -37,6 +37,6 @@ review). If the API contract is missing or unresolved, stop and hand back to the
 
 - Write feature files and step definitions only in the Java application repository. Never create test
   source under `top-api-spec-workflow` or `top-spec-workflow`.
-- Do not invent acceptance scenarios not traceable to `acceptance.md` or the contract; record gaps instead
+- Do not invent acceptance scenarios that are not on `api-contract.json`; record gaps instead
   of guessing.
 - Report results per scenario (PASS/FAIL) and summarize any acceptance criteria left uncovered.
