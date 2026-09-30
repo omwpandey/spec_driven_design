@@ -9,6 +9,7 @@ import {
   grillStatus,
   isAnalystAllowedPath,
   isArchitectAllowedPath,
+  isChecklistReviewMd,
   isDeveloperAllowedPath,
   isTesterAllowedPath,
   isComponentMapPath,
@@ -102,6 +103,11 @@ if (!candidates.length && agent === "tester") {
     "Test Script Developer edit blocked because target path could not be verified. It may only write test files and specs/<ID>/test-report.md.",
   );
 }
+if (!candidates.length && agent === "checklist-reviewer") {
+  deny(
+    "Review-Using-Checklist edit blocked because target path could not be verified. It may only write specs/<FUNCTION_KEY>/checklist-review.md.",
+  );
+}
 
 if (!candidates.length) allow();
 
@@ -121,6 +127,15 @@ if (agent === "reviewer") {
   const unsafe = candidates.filter((p) => !isReviewMd(p));
   if (unsafe.length) {
     deny(`UI Reviewer may only write specs/<ID>/review.md. Blocked: ${unsafe.join(", ")}`);
+  }
+}
+
+if (agent === "checklist-reviewer") {
+  const unsafe = candidates.filter((p) => !isChecklistReviewMd(p));
+  if (unsafe.length) {
+    deny(
+      `Review-Using-Checklist may only write specs/<FUNCTION_KEY>/checklist-review.md. Blocked: ${unsafe.join(", ")}`,
+    );
   }
 }
 
@@ -148,12 +163,17 @@ if (agent === "tester") {
 }
 
 const writingReview = candidates.some(isReviewMd);
+const writingChecklistReview = candidates.some(isChecklistReviewMd);
 const writingSrc = candidates.some(isSrcUiPath);
 const writingContract = candidates.some(isContractPath);
 const writingMap = candidates.some(isComponentMapPath);
 
 if (writingReview && writingSrc) {
   deny("Do not mix review.md with source edits. UI Reviewer writes only review.md.");
+}
+
+if (writingChecklistReview && writingSrc) {
+  deny("Do not mix checklist-review.md with source edits. Review-Using-Checklist is read-only over src/.");
 }
 
 if (writingSrc && !featureIds.size) {
@@ -200,5 +220,6 @@ if (agent === "analyst") allow({ additionalContext: "Write is within analyst-all
 if (agent === "architect") allow({ additionalContext: "Write is limited to component-map.json." });
 if (agent === "developer") allow({ additionalContext: "Write is limited to the screen module, service, registries, and language files." });
 if (agent === "reviewer") allow({ additionalContext: "Write is limited to review.md." });
+if (agent === "checklist-reviewer") allow({ additionalContext: "Write is limited to checklist-review.md." });
 if (agent === "tester") allow({ additionalContext: "Write is limited to test files and test-report.md." });
 allow();

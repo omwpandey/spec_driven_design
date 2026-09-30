@@ -43,8 +43,21 @@ If grill is `pending_review` or `rejected`, stop. If a blocking open question wo
 src/modules/<FUNCTION_KEY>/<PascalCase>Page.tsx
 src/modules/<FUNCTION_KEY>/<name>.styles.ts
 src/modules/<FUNCTION_KEY>/index.ts
+src/modules/<FUNCTION_KEY>/__tests__/<PascalCase>Page.test.tsx
 src/services/<FUNCTION_KEY>Service.ts
+src/mocks/<FUNCTION_KEY>/<api-id>.json
 ```
+
+If the feature has screen-local tables, popups, tabs, or other pieces, put them in
+`src/modules/<FUNCTION_KEY>/components/` and add that folder's `index.ts` barrel.
+Every exportable folder created for the feature must have an `index.ts` barrel.
+Keep feature styles local and minimal; shared visual styling belongs in `src/components`.
+
+Types files may contain only interfaces, type aliases, DTOs, request/response contracts,
+enums, and component props. Do not put API calls, hooks, validation, constants, or React
+components in a types file. Prefer named constants in `.ts` files over generic `data.ts`.
+Create one mock JSON response for every API endpoint and make the generated MSW handler
+load that endpoint's JSON response.
 
 Also the generated route registry, module registry, and MSW handlers when `npm run screen:generate` updates them, and translation keys in `src/core/languages/en.ts` and `th.ts` when the contract specifies user-visible copy.
 
@@ -55,6 +68,7 @@ Do not reread Confluence or `raw/`. Do not edit `ui-contract.json` or `component
 ```bash
 npm run feature:validate -- <FUNCTION_KEY>
 npm run component-map:validate -- <FUNCTION_KEY>
+npm run module:validate -- <FUNCTION_KEY>
 npm run ui:guard
 npm run ui:harness -- <FUNCTION_KEY>
 ```

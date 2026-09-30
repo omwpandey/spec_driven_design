@@ -63,6 +63,7 @@ export function detectAgent(payload) {
     payload?.agentId,
   ];
   const text = keys.map(agentLabel).join(" ").toLowerCase();
+  if (/review[-_ ]?using[-_ ]?checklist|checklist[-_ ]?review/.test(text)) return "checklist-reviewer";
   if (/requirement[-_ ]?analyst|ui-requirement-analyst|ui requirement analyst/.test(text)) return "analyst";
   if (/test[-_ ]?script[-_ ]?developer|test script developer/.test(text)) return "tester";
   if (/ui[-_ ]?developer|ui developer/.test(text)) return "developer";
@@ -157,6 +158,11 @@ export function isSrcUiPath(p) {
 
 export function isReviewMd(p) {
   return /^specs\/[^/]+\/review\.md$/.test(p);
+}
+
+/** Review-Using-Checklist may only write its own report, kept separate from review.md. */
+export function isChecklistReviewMd(p) {
+  return /^specs\/[^/]+\/checklist-review\.md$/.test(p);
 }
 
 export function isFeaturesPath(p) {

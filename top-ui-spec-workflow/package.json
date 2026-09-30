@@ -6,9 +6,12 @@
   "scripts": {
     "feature:validate": "node scripts/validate-feature-contract.mjs",
     "component-map:validate": "node scripts/validate-component-map.mjs",
+    "module:validate": "node scripts/validate-module-structure.mjs",
     "screen:generate": "node scripts/generate-screen.mjs",
     "ui:catalog": "node scripts/generate-component-catalog.mjs",
     "ui:guard": "node scripts/ui-guard.mjs",
-    "ui:harness": "node scripts/ui-harness-check.mjs"
+    "ui:harness": "node scripts/ui-harness-check.mjs",
+    "checklist:load": "node scripts/checklist-load.mjs",
+    "checklist:verify": "node scripts/checklist-verify.mjs"
   }
 }

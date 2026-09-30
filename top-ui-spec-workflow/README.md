@@ -26,6 +26,16 @@ Select one agent. Each agent writes only the files in its row. The policy is [PO
 | UI Reviewer | `review.md` |
 | Test Script Developer | tests and `test-report.md` |
 
+`Review-Using-Checklist` is independent of the chain above. It reviews any Function Key already present in `top-ui` against `UI_REVIEW_CHECKLIST_28-Sep.xlsx` and writes only `checklist-review.md`.
+
+```powershell
+npm run checklist:load -- <FUNCTION_KEY>              # print the checklist read from the workbook
+npm run checklist:load -- <FUNCTION_KEY> --scaffold   # create specs/<FUNCTION_KEY>/checklist-review.md
+npm run checklist:verify -- <FUNCTION_KEY>            # coverage counts and report consistency
+```
+
+The workbook is the source of truth for items, statuses, severities, and verdicts. Point `UI_CHECKLIST_XLSX` at another workbook to review against a different revision.
+
 ## Repository boundary
 
 This repository contains UI contracts, component maps, UI agent configuration, and React validation scripts. Shared DR exports and technology-neutral requirements belong in `top-spec-workflow`. React implementation remains in the `top-ui` application repository.

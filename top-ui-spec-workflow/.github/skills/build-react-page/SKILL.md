@@ -31,6 +31,26 @@ src/modules/<FUNCTION_KEY>/<PascalCase>Page.tsx
 
 Screen-local pieces go in `src/modules/<FUNCTION_KEY>/components/`. Leave existing `*Page.tsx` under `src/demoModules` / `src/modules` as-is. Put the feature service in `src/services/<FUNCTION_KEY>Service.ts`. Do not add screens to `COMPONENT_CATALOG.md`.
 
+Every generated module must contain:
+
+```text
+src/modules/<FUNCTION_KEY>/
+	<PascalCase>Page.tsx
+	index.ts
+	__tests__/
+		<PascalCase>Page.test.tsx
+```
+
+If `components/` or another exportable feature folder is needed, keep it under the
+Function Key and add an `index.ts` barrel. Keep screen-specific styles in the module and
+minimal; reuse shared components and theme tokens for the visual system. Do not create a
+generic `data.ts`. Use named constants in `.ts` files and one JSON mock response under
+`src/mocks/<FUNCTION_KEY>/` for every API endpoint.
+
+Types files contain only interfaces, type aliases, DTOs, request/response contracts,
+enums, and component props. Keep API calls, hooks, validation, constants, and React
+components out of types files.
+
 Follow `.github/instructions/react.instructions.md` naming: `handle{Event}`, `is`/`has`/`should`, UPPER_SNAKE_CASE constants, `SCREEN_IDS` from the contract Function Key.
 
 ## Page shape
@@ -80,6 +100,7 @@ New shared or page-specific UI needs a component-map rationale. Prefer configuri
 ```bash
 npm run feature:validate -- <STORY-ID>
 npm run component-map:validate -- <STORY-ID>
+npm run module:validate -- <STORY-ID>
 npm run ui:guard
 ```
 
