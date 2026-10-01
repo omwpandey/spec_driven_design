@@ -1,0 +1,10 @@
+{
+  "name": "top-api-spec-workflow",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "checklist:load": "node scripts/checklist-review.mjs load",
+    "checklist:verify": "node scripts/checklist-review.mjs verify"
+  }
+}

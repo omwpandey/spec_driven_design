@@ -17,7 +17,8 @@ The `.github/` directory contains the API workflow guidance:
 │   ├── api-contract-analyst.agent.md     # Phase 2: writes/reviews api-contract.json
 │   ├── java-function-developer.agent.md  # Phase 3: generates Java from the contract
 │   ├── java-test-engineer.agent.md       # Phase 4a: generates/runs Cucumber scenarios
-│   └── java-function-reviewer.agent.md   # Phase 4b: read-only review.md against the contract
+│   ├── java-function-reviewer.agent.md   # Phase 4b: read-only review.md against the contract
+│   └── review-using-backend-checklist.agent.md # independent workbook-based implementation review
 ├── instructions/api-contract.instructions.md
 ├── instructions/java-implementation-reference.instructions.md
 ├── instructions/main-source-code.instructions.md
@@ -36,6 +37,20 @@ Use the **API Spec Orchestrator** to drive the full pipeline. The **API Contract
 shared grill is agreed and produces or reviews the API contract only. Java implementation, generated tests,
 and code review happen in the Java application repository, driven from here by the **Java Function
 Developer**, **Java Test Engineer**, and **Java Function Reviewer** agents.
+
+`Review-Using-Backend-Checklist` is independent of that chain. It reviews one Function Key in the Java
+application repository against `Backend_development_checkList 2.xlsx` and writes only
+`backend-checklist-review.md` in the matching shared spec folder. Checks whose required PR, CI, or manual
+evidence is unavailable are reported as `NOT REVIEWABLE`, not assumed to pass.
+
+```powershell
+npm run checklist:load -- <FUNCTION_KEY>              # print workbook items and required evidence
+npm run checklist:load -- <FUNCTION_KEY> --scaffold   # create the shared backend review report
+npm run checklist:verify -- <FUNCTION_KEY>            # validate item coverage and report consistency
+```
+
+Set `TOP_API_SPEC_ROOT` if the shared `top-spec-workflow/specs` directory is outside its default sibling
+location, or `TOP_API_CHECKLIST_XLSX` to use another workbook revision.
 
 Use `prepare-api-contract.prompt.md` for chat-only normalization when needed, then use
 `create-api-contract.prompt.md` to write the single durable `api-contract.json`. Do not create a separate
